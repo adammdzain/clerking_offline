@@ -3251,12 +3251,60 @@
     html[data-theme] body #main-sections .content.expanded.cb-grid {
       display: grid !important; /* the vitals block carries an inline display */
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px 24px;
-      align-items: start;
+      gap: 12px;
+      align-items: stretch;
     }
     html[data-theme] body .cb-grid > :not(.cb-field) { grid-column: 1 / -1; }
     .cb-field { min-width: 0; }
     html[data-theme] body .cb-field > label:first-child { margin-top: 0; }
+
+    /* Each field (label + its box) sits in its own panel, one step lighter than the
+       section in dark mode and one step tinted against the white section in day mode. */
+    html[data-theme] body #main-sections .cb-grid > .cb-field,
+    html[data-theme] body #main-sections .cb-grid > :is(.grid-2, .grid-3) > div {
+      background: var(--panel-2);
+      border: 1px solid var(--panel-3);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    html[data-theme] body #main-sections .cb-grid > :is(.grid-2, .grid-3) > div > label:first-child { margin-top: 0; }
+    /* Trauma: the same one-panel-per-field treatment */
+    html[data-theme] body .trauma-workspace .clinical-entry-row,
+    html[data-theme] body .trauma-workspace .region-row,
+    html[data-theme] body .trauma-workspace .gcs-panel > div:not(.gcs-score-badge),
+    html[data-theme] body .trauma-workspace .pupil-split-grid .eye-assessment-card {
+      background: var(--panel-2) !important;
+      border: 1px solid var(--panel-3) !important;
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    html[data-theme] body .trauma-workspace .clinical-entry-row { gap: 8px; }
+    html[data-theme] body .trauma-workspace .clinical-entry-row[style*="border-top"] { padding-top: 12px !important; }
+    html[data-theme] body .trauma-workspace .region-row > label { margin: 0; }
+    /* The GCS strip no longer needs its own frame now each scale has a panel */
+    html[data-theme] body .trauma-workspace .gcs-panel {
+      border: 0 !important;
+      padding: 0;
+    }
+    /* Trauma field labels match the rest of the app: larger, bold, brighter */
+    html[data-theme] body .trauma-workspace .clinical-entry-label,
+    html[data-theme] body .trauma-workspace .clinical-entry-label[style] {
+      font-size: 14px;
+      font-weight: 600 !important;
+      color: var(--text-2) !important;
+    }
+    html[data-theme] body .trauma-workspace .gcs-panel > div > div:first-child,
+    html[data-theme] body .trauma-workspace .eye-assessment-card > div > div:first-child {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: var(--text-2) !important;
+    }
+    /* Quick-pick chips keep a visible outline on the lighter panel */
+    html[data-theme] body #main-sections .trauma-workspace .chip-btn:not(.active):not(:hover),
+    html[data-theme] body #main-sections .cb-grid .chip-btn:not(.active):not(:hover) {
+      background: var(--field) !important;
+      border-color: var(--border-strong) !important;
+    }
 
     /* Sub-sections sit side by side; the open one takes the full row. */
     html[data-theme] body #sections-container,
@@ -3801,7 +3849,7 @@
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Patency :</span>
+                    <span class="clinical-entry-label">Patency</span>
                     <div class="chip-row" id="airwayPatencyRow" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="selectAirwayPatency" data-args='["traumaAirwayPatency", {"this": true}]'>Patent</button>
                       <button type="button" class="chip-btn" data-on-click="selectAirwayPatency" data-args='["traumaAirwayPatency", {"this": true}]'>Obstructed</button>
@@ -3810,7 +3858,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Cervical Spine &amp; Trachea :</span>
+                    <span class="clinical-entry-label">Cervical Spine &amp; Trachea</span>
                     <div class="chip-row" id="airwayCSpineRow" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaAirwayCSpine", {"this": true}]'>No injury</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaAirwayCSpine", {"this": true}]'>Injury suspected</button>
@@ -3822,7 +3870,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions :</span>
+                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions</span>
                     <div class="chip-row" id="airwayInterventionsRow" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaAirwayIntervention", {"this": true}]'>Nasal prongs</button>
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaAirwayIntervention", {"this": true}]'>Oropharyngeal airway</button>
@@ -3844,7 +3892,7 @@
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Inspection :</span>
+                    <span class="clinical-entry-label">Inspection</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespInspection", {"this": true}]'>Symmetrical chest expansion</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespInspection", {"this": true}]'>No open chest wounds / flail</button>
@@ -3854,7 +3902,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Palpation :</span>
+                    <span class="clinical-entry-label">Palpation</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespPalpation", {"this": true}]'>No chest wall tenderness</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespPalpation", {"this": true}]'>No surgical emphysema</button>
@@ -3864,7 +3912,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Percussion :</span>
+                    <span class="clinical-entry-label">Percussion</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespPercussion", {"this": true}]'>Resonant bilateral</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespPercussion", {"this": true}]'>Dull right base</button>
@@ -3874,7 +3922,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Auscultation :</span>
+                    <span class="clinical-entry-label">Auscultation</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespAuscultation", {"this": true}]'>Equal air entry bilateral</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaRespAuscultation", {"this": true}]'>Clear vesicular breath sounds</button>
@@ -3884,7 +3932,7 @@
                   </div>
 
                   <div class="clinical-entry-row" style="border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">
-                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions :</span>
+                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaRespIntervention", {"this": true}]'>Needle Thoracostomy</button>
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaRespIntervention", {"this": true}]'>Chest tube insertion</button>
@@ -3905,7 +3953,7 @@
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">CCTVR :</span>
+                    <span class="clinical-entry-label">CCTVR</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaCircCctvr", {"this": true}]'>Color: Pink</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaCircCctvr", {"this": true}]'>Capillary Refill: &lt;2s</button>
@@ -3917,7 +3965,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">External hemorrhage :</span>
+                    <span class="clinical-entry-label">External hemorrhage</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaCircHemorrhage", {"this": true}]'>No external active bleeding</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaCircHemorrhage", {"this": true}]'>Minor oozing controlled</button>
@@ -3927,7 +3975,7 @@
                   </div>
 
                   <div class="clinical-entry-row" style="border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">
-                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions :</span>
+                    <span class="clinical-entry-label" style="color:#fbbf24;">Interventions</span>
                     <div class="chip-row" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaCircIntervention", {"this": true}]'>IV Access (18G cannula x 2)</button>
                       <button type="button" class="chip-btn intervention" data-on-click="appendFieldChip" data-args='["traumaCircIntervention", {"this": true}]'>IV Normal Saline 500ml</button>
@@ -3950,7 +3998,7 @@
                 <!-- GCS Calculator Row -->
                 <div class="gcs-panel">
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">EYE (1-4):</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--muted);">EYE (1-4)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-e" data-val="1" data-on-click="setTraumaGcsE" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-e" data-val="2" data-on-click="setTraumaGcsE" data-args='[2, {"this": true}]'>2</button>
@@ -3959,7 +4007,7 @@
                     </div>
                   </div>
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">VERBAL (1-5):</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--muted);">VERBAL (1-5)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-v" data-val="1" data-on-click="setTraumaGcsV" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-v" data-val="2" data-on-click="setTraumaGcsV" data-args='[2, {"this": true}]'>2</button>
@@ -3969,7 +4017,7 @@
                     </div>
                   </div>
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">MOTOR (1-6):</div>
+                    <div style="font-size:11px; font-weight:700; color:var(--muted);">MOTOR (1-6)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-m" data-val="1" data-on-click="setTraumaGcsM" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-m" data-val="2" data-on-click="setTraumaGcsM" data-args='[2, {"this": true}]'>2</button>
@@ -3998,7 +4046,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">SIZE (1-8 mm GAUGE):</div>
+                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">SIZE (1-8 mm GAUGE)</div>
                       <div class="pupil-gauge" id="traumaOdGauge">
                         <span class="gauge-item" data-on-click="setTraumaEyeSize" data-args='["od", 1, {"this": true}]'>1 <span class="p-dot" style="width:3px; height:3px;"></span></span>
                         <span class="gauge-item" data-on-click="setTraumaEyeSize" data-args='["od", 2, {"this": true}]'>2 <span class="p-dot" style="width:5px; height:5px;"></span></span>
@@ -4012,7 +4060,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY:</div>
+                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY</div>
                       <div class="chip-row" id="traumaOdReactivity">
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["od", "Reactive", {"this": true}]'>Reactive</button>
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["od", "Sluggish", {"this": true}]'>Sluggish</button>
@@ -4031,7 +4079,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">SIZE (1-8 mm GAUGE):</div>
+                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">SIZE (1-8 mm GAUGE)</div>
                       <div class="pupil-gauge" id="traumaOsGauge">
                         <span class="gauge-item" data-on-click="setTraumaEyeSize" data-args='["os", 1, {"this": true}]'>1 <span class="p-dot" style="width:3px; height:3px;"></span></span>
                         <span class="gauge-item" data-on-click="setTraumaEyeSize" data-args='["os", 2, {"this": true}]'>2 <span class="p-dot" style="width:5px; height:5px;"></span></span>
@@ -4045,7 +4093,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY:</div>
+                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY</div>
                       <div class="chip-row" id="traumaOsReactivity">
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["os", "Reactive", {"this": true}]'>Reactive</button>
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["os", "Sluggish", {"this": true}]'>Sluggish</button>
@@ -4075,7 +4123,7 @@
 
                 <!-- Regional Examination Details from PDF Page 2 -->
                 <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:4px;">
-                  <div style="font-size:11.5px; font-weight:700; color:#93c5fd; margin-bottom:8px;">REGIONAL INJURY DETAILS:</div>
+                  <div style="font-size:11.5px; font-weight:700; color:#93c5fd; margin-bottom:8px;">REGIONAL INJURY DETAILS</div>
                   <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                     <div class="region-row"><label>Head</label><input aria-label="Reg Head" type="text" id="traumaRegHead" value="" /></div>
                     <div class="region-row"><label>Neck</label><input aria-label="Reg Neck" type="text" id="traumaRegNeck" value="" /></div>
@@ -4103,7 +4151,7 @@
 
                 <!-- Interactive Injury Tool Palette (with Puncture, Swelling & Deformity) -->
                 <div class="diagram-toolbar">
-                  <span style="font-size:11px; font-weight:bold; color:var(--muted);">PLOT TOOL:</span>
+                  <span style="font-size:11px; font-weight:bold; color:var(--muted);">PLOT TOOL</span>
                   <div style="display:flex; gap:4px; flex-wrap:wrap;">
                     <button type="button" class="injury-tool-btn tool-lac" data-on-click="selectTraumaTool" data-args='["L", "#ef4444", {"this": true}]'>Laceration (L)</button>
                     <button type="button" class="injury-tool-btn tool-abr" data-on-click="selectTraumaTool" data-args='["A", "#f97316", {"this": true}]'>Abrasion (A)</button>
@@ -4381,7 +4429,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
                 <!-- Pinned Injuries Ledger -->
                 <div class="injury-ledger">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                    <span style="font-size:11px; font-weight:700; color:var(--muted);">MAPPED TRAUMA INJURIES:</span>
+                    <span style="font-size:11px; font-weight:700; color:var(--muted);">MAPPED TRAUMA INJURIES</span>
                     <span style="font-size:10px; color:var(--accent);">Auto-links to Clerking Sheet</span>
                   </div>
 
