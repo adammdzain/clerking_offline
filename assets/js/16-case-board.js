@@ -151,13 +151,26 @@ function cbRevealCard(card) {
   window.scrollTo({ top: window.scrollY + top - offset, behavior: CB_REDUCED_MOTION.matches ? 'auto' : 'smooth' });
 }
 
+// On wide screens the note is docked beside the board and always open (see the CSS of the same width).
+const CB_DOCKED = window.matchMedia('screen and (min-width: 1181px)');
+
 function setNoteSheet(open) {
+  if (CB_DOCKED.matches) open = true;
   document.body.classList.toggle('note-open', open);
   document.getElementById('noteToggle').setAttribute('aria-expanded', String(open));
 }
 
 function toggleNoteSheet() {
   setNoteSheet(!document.body.classList.contains('note-open'));
+}
+
+function cbInitNoteDock() {
+  const header = document.querySelector('body > header');
+  const track = () => document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+  track();
+  new ResizeObserver(track).observe(header);
+  setNoteSheet(CB_DOCKED.matches);
+  CB_DOCKED.addEventListener('change', () => setNoteSheet(CB_DOCKED.matches));
 }
 
 function cbInitNoteSheet() {
@@ -169,7 +182,7 @@ function cbInitNoteSheet() {
     if (!header.contains(e.target)) setNoteSheet(true);
   });
   document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape' || !document.body.classList.contains('note-open')) return;
+    if (e.key !== 'Escape' || CB_DOCKED.matches || !document.body.classList.contains('note-open')) return;
     if (document.querySelector('.modal-backdrop.active, .forms-menu.open')) return;
     setNoteSheet(false);
     document.getElementById('noteToggle').focus();
@@ -231,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cbInitBoardMotion();
   cbInitNoteSheet();
+  cbInitNoteDock();
   cbFitBoard();
   cbRefresh();
 

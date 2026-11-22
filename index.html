@@ -3500,6 +3500,47 @@
     html[data-theme] body .output-container .forms-menu-list { top: auto; bottom: calc(100% + 6px); }
     html[data-theme] body .toast { bottom: calc(var(--sheet-peek) + 16px); }
 
+    /* ---------- Wide screens: the note docks beside the board ----------
+       Same width threshold as the 4-column board; below it the bottom sheet stays.
+       --header-h is kept in step with the sticky header by 16-case-board.js. */
+    @media screen and (min-width: 1181px) {
+      :root { --dock-w: clamp(360px, 30vw, 520px); }
+      html[data-theme] body,
+      html[data-theme] body.note-open { padding-bottom: 24px; }
+      html[data-theme] body #main-sections {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        max-width: none;
+        margin: 0;
+        padding-right: calc(var(--dock-w) + 2 * var(--board-gutter));
+      }
+      html[data-theme] body .output-container,
+      html[data-theme] body.note-open .output-container {
+        left: auto;
+        right: var(--board-gutter);
+        top: calc(var(--header-h, 54px) + 16px);
+        bottom: 16px;
+        width: var(--dock-w);
+        height: auto;
+        padding: 0 16px 16px 20px;
+        border-radius: var(--radius-md);
+        border-bottom: 1px solid var(--border) !important;
+        box-shadow: none !important;
+        transform: none;
+        transition: none;
+      }
+      html[data-theme="dark"] body .output-container { box-shadow: none !important; }
+      /* Keep the body diagram's share of the narrower Trauma card. */
+      html[data-theme] body .trauma-columns { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+      html[data-theme] body .pupil-split-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+      html[data-theme] body #noteToggle { cursor: default; }
+      .cb-note-chev,
+      #noteGrip,
+      body.note-open #noteGrip { display: none; }
+      /* The header row already holds Copy Notes. */
+      html[data-theme] body .output-container .button-row > .btn-primary { display: none; }
+      html[data-theme] body .toast { bottom: 24px; right: calc(var(--dock-w) + 2 * var(--board-gutter)); }
+    }
+
     /* ---------- Tablet and phone ---------- */
     @media (max-width: 1180px) {
       html[data-theme] body > header { flex-wrap: wrap; }
