@@ -3157,6 +3157,29 @@
     .cb-status .dot { fill: var(--accent); stroke: none; opacity: 0; transform: scale(.4); transform-origin: 8px 8px; transition: opacity .18s ease, transform .22s var(--ease-out); }
     .cb-status .ring { transition: stroke .2s ease, fill .2s ease; }
     .cb-status .tick { stroke: var(--accent-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .3s var(--ease-out) .06s; }
+    /* Tiles sit above the shell a closing card leaves behind (see cbCloseGhost). */
+    html[data-theme] body #main-sections .main-section { position: relative; z-index: 1; }
+    html[data-theme] body #main-sections .main-section.is-expanded { z-index: 2; }
+    .cb-ghost {
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      background: var(--panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+    }
+    /* The sliding highlight of a segmented tab row; it stands in for the active tab's own fill while it moves. */
+    .trauma-nav-tabs, .exam-system-tabs, .exam-format-toggle { position: relative; }
+    .trauma-nav-tabs > *, .exam-system-tabs > *, .exam-format-toggle > * { position: relative; z-index: 1; }
+    .cb-pill {
+      position: absolute !important;
+      z-index: 0 !important;
+      pointer-events: none;
+      border-radius: 999px;
+      background: var(--panel);
+      box-shadow: 0 0 0 1px var(--border);
+    }
+    html[data-theme] body .cb-pill-moving > .trauma-tab-btn.active { background: transparent !important; box-shadow: none !important; }
     .cb-status.is-draft .dot { opacity: 1; transform: none; }
     .cb-status.is-done .ring { stroke: var(--accent); fill: var(--accent); }
     .cb-status.is-done .tick { stroke-dashoffset: 0; }

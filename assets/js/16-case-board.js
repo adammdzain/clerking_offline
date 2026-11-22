@@ -9,8 +9,39 @@ const CB_STATUS_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle clas
 const cbInserted = new Map();
 
 function cbAnimate(el, frames, options) {
-  if (CB_REDUCED_MOTION.matches || !el || !el.animate) return;
-  el.animate(frames, Object.assign({ duration: 220, easing: 'cubic-bezier(.2, .8, .2, 1)' }, options));
+  if (CB_REDUCED_MOTION.matches || !el || !el.animate) return null;
+  return el.animate(frames, Object.assign({ duration: 220, easing: 'cubic-bezier(.2, .8, .2, 1)' }, options));
+}
+
+// Board motion is tagged so a new click can stop it without touching the page's own CSS transitions.
+const CB_MOTION_ID = 'cb-board';
+
+function cbStopBoardMotion(board) {
+  board.getAnimations({ subtree: true }).forEach(a => { if (a.id === CB_MOTION_ID) a.cancel(); });
+  document.querySelectorAll('.cb-ghost').forEach(g => g.remove());
+}
+
+function cbMove(el, frames, options) {
+  const a = cbAnimate(el, frames, options);
+  if (a) a.id = CB_MOTION_ID;
+  return a;
+}
+
+// The card that closes leaves a fading shell behind the tiles, shrinking from its open size into its tile.
+function cbCloseGhost(from, to) {
+  if (CB_REDUCED_MOTION.matches) return;
+  const ghost = document.createElement('div');
+  ghost.className = 'cb-ghost';
+  Object.assign(ghost.style, { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px` });
+  document.body.appendChild(ghost);
+  const inset = [to.top - from.top, from.right - to.right, from.bottom - to.bottom, to.left - from.left].map(v => `${Math.max(0, v)}px`).join(' ');
+  const a = ghost.animate(
+    [{ clipPath: 'inset(0 round 8px)', opacity: 1 }, { clipPath: `inset(${inset} round 8px)`, opacity: 0 }],
+    { duration: 240, easing: 'cubic-bezier(.2, .8, .2, 1)' }
+  );
+  a.onfinish = a.oncancel = () => ghost.remove();
+  // A tab that stops painting mid-animation must not leave the shell on the page.
+  setTimeout(() => ghost.remove(), 600);
 }
 
 // Wrap each flat label + chips + input run in its own box so fields can sit in columns.
@@ -117,31 +148,46 @@ function cbFitBoard() {
 function cbInitBoardMotion() {
   const board = document.getElementById('main-sections');
   let before = null;
+  let wasOpen = null;
   // Capture runs before the accordion handler in 01-core.js; bubble runs after it.
+  // Rects are read while any earlier motion is still running, so a quick second click starts from where cards are seen.
   board.addEventListener('click', e => {
     if (!e.target.closest('.main-collapsible')) return;
-    before = new Map(Array.from(board.querySelectorAll('.main-section')).map(c => [c, c.getBoundingClientRect()]));
+    const cards = Array.from(board.querySelectorAll('.main-section'));
+    before = new Map(cards.map(c => [c, c.getBoundingClientRect()]));
+    wasOpen = new Set(cards.filter(c => c.classList.contains('is-expanded')));
   }, true);
   board.addEventListener('click', e => {
     const button = e.target.closest('.main-collapsible');
     if (!button || !before) return;
     const opened = button.closest('.main-section');
     const first = before;
-    before = null;
+    const open = wasOpen;
+    before = wasOpen = null;
+    cbStopBoardMotion(board);
     cbFitBoard();
+    // Scroll first and fold the jump into the glide below, so the screen makes one movement, not two.
+    if (opened.classList.contains('is-expanded')) cbRevealCard(opened);
     first.forEach((a, card) => {
       const b = card.getBoundingClientRect();
       const dx = a.left - b.left;
       const dy = a.top - b.top;
-      if (card === opened && card.classList.contains('is-expanded')) {
+      const isOpen = card.classList.contains('is-expanded');
+      if (card === opened && isOpen) {
         const clip = `inset(0 ${Math.max(0, b.width - a.width)}px ${Math.max(0, b.height - a.height)}px 0 round 8px)`;
-        cbAnimate(card, [{ transform: `translate(${dx}px, ${dy}px)`, clipPath: clip }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 8px)' }], { duration: 320 });
-        cbAnimate(card.querySelector('.main-content'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 240, delay: 90, fill: 'backwards' });
+        cbMove(card, [{ transform: `translate(${dx}px, ${dy}px)`, clipPath: clip }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 8px)' }], { duration: 300 });
+        cbMove(card.querySelector('.main-content'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 220, delay: 80, fill: 'backwards' });
       } else if (dx || dy) {
-        cbAnimate(card, [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 320 });
+        cbMove(card, [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 300 });
+      }
+      if (open.has(card) && !isOpen) {
+        cbCloseGhost(a, b);
+        // The tile's summary and status come back once it has settled, rather than popping in mid-glide.
+        card.querySelectorAll('.cb-summary, .cb-status').forEach(el => {
+          cbMove(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 180, delay: 140, easing: 'ease-out', fill: 'backwards' });
+        });
       }
     });
-    if (opened.classList.contains('is-expanded')) cbRevealCard(opened);
   });
 }
 
@@ -150,7 +196,59 @@ function cbRevealCard(card) {
   const offset = (getComputedStyle(header).position === 'sticky' ? header.offsetHeight : 0) + 12;
   const top = card.getBoundingClientRect().top;
   if (top >= offset && top <= window.innerHeight * 0.5) return;
-  window.scrollTo({ top: window.scrollY + top - offset, behavior: CB_REDUCED_MOTION.matches ? 'auto' : 'smooth' });
+  window.scrollTo({ top: window.scrollY + top - offset, behavior: 'instant' });
+}
+
+// Segmented pill tabs inside a card: the highlight slides to the new tab and the panel it shows fades in.
+const CB_PILL_PANELS = {
+  'trauma-nav-tabs': '#traumaLeftCol, #traumaRightCol',
+  'exam-system-tabs': '#examExperimentWrap .exam-map-columns',
+  'exam-format-toggle': '#examQuickCard, #examExperimentWrap',
+};
+
+function cbInitPillTabs() {
+  let from = null;
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.trauma-tab-btn');
+    if (!btn || !btn.parentElement) return;
+    const list = btn.parentElement;
+    const moving = list.querySelector(':scope > .cb-pill');
+    const active = list.querySelector(':scope > .trauma-tab-btn.active');
+    from = { list, active, rect: (moving || active || btn).getBoundingClientRect() };
+  }, true);
+  // Registered after 00-events.js, so this runs once the tab's own handler has switched it.
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.trauma-tab-btn');
+    const start = from;
+    from = null;
+    if (!btn || !start || start.list !== btn.parentElement || CB_REDUCED_MOTION.matches) return;
+    const list = start.list;
+    const next = list.querySelector(':scope > .trauma-tab-btn.active');
+    if (!next || next === start.active) return;
+
+    list.querySelectorAll(':scope > .cb-pill').forEach(p => p.remove());
+    const box = list.getBoundingClientRect();
+    const to = next.getBoundingClientRect();
+    const place = r => ({ left: `${r.left - box.left + list.scrollLeft - list.clientLeft}px`, top: `${r.top - box.top - list.clientTop}px`, width: `${r.width}px`, height: `${r.height}px` });
+    const pill = document.createElement('span');
+    pill.className = 'cb-pill';
+    pill.setAttribute('aria-hidden', 'true');
+    Object.assign(pill.style, place(to));
+    list.prepend(pill);
+    list.classList.add('cb-pill-moving');
+    const a = pill.animate([place(start.rect), place(to)], { duration: 240, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+    a.onfinish = a.oncancel = () => {
+      pill.remove();
+      if (!list.querySelector(':scope > .cb-pill')) list.classList.remove('cb-pill-moving');
+    };
+
+    const panels = Object.keys(CB_PILL_PANELS).find(cls => list.classList.contains(cls));
+    if (!panels) return;
+    // Opacity only: the exam map measures its own position while it settles, so nothing here may move it.
+    document.querySelectorAll(CB_PILL_PANELS[panels]).forEach(el => {
+      if (el.offsetParent !== null) el.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 180, easing: 'ease-out' });
+    });
+  });
 }
 
 // On wide screens the note is docked beside the board and always open (see the CSS of the same width).
@@ -245,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#patient-demographic .main-content, #medical-history .main-content, #main-sections .content').forEach(cbGroupFields);
 
   cbInitBoardMotion();
+  cbInitPillTabs();
   cbInitNoteSheet();
   cbInitNoteDock();
   cbFitBoard();
