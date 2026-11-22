@@ -2644,10 +2644,17 @@
     html[data-theme] body label {
       text-transform: none;
       letter-spacing: 0;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    /* Sub-labels inside a group (e.g. Years / Months / Days / Hours) stay one step quieter */
+    html[data-theme] body #ageFields label {
+      font-size: 12.5px;
       font-weight: 500;
       color: var(--muted);
-      margin-top: 10px;
     }
     html[data-theme] body input[type="text"],
     html[data-theme] body input[type="number"],
@@ -2671,7 +2678,7 @@
       html[data-theme] body input, html[data-theme] body select, html[data-theme] body textarea { font-size: 16px; }
     }
     html[data-theme] body input::placeholder,
-    html[data-theme] body textarea::placeholder { color: var(--muted) !important; opacity: .7; }
+    html[data-theme] body textarea::placeholder { color: var(--muted) !important; opacity: .55; }
     html[data-theme] body input:focus,
     html[data-theme] body select:focus,
     html[data-theme] body textarea:focus {
