@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NNJ Clerking Sheet</title>
+<!--
+  One-page A4 paper version of the Routine cases > NNJ card, for clerking by hand.
+  Same order as the note. The AAP thresholds come from assets/js/18-nnj.js, the file
+  the app's calculator uses, so the paper and the app always agree.
+  Print to PDF with:  python3 scripts/print_nnj_sheet.py
+-->
+<style>
+  @page { size: A4; margin: 7mm 8mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.3;
+    color: #000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  h1 { font-size: 14pt; margin: 0; letter-spacing: .2px; }
+  .sub { font-size: 8pt; color: #333; }
+  .top { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1.4pt solid #000; padding-bottom: 1.5mm; margin-bottom: 1.6mm; }
+  .id { display: grid; grid-template-columns: 1.8fr 1fr 1.9fr auto; gap: 1.2mm 4mm; margin-bottom: 2mm; }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 4mm; }
+  section { border: .7pt solid #000; border-radius: 1.4mm; padding: 1.2mm 2mm 1.2mm; margin-bottom: 2mm; break-inside: avoid; }
+  h2 { font-size: 9.6pt; margin: 0 0 .8mm; text-transform: uppercase; letter-spacing: .4px; background: #e6e6e6; margin: -1.2mm -2mm 1mm; padding: .7mm 2mm; border-radius: 1.4mm 1.4mm 0 0; border-bottom: .5pt solid #000; }
+  .row { margin: .7mm 0; }
+  .lbl { font-weight: 700; }
+  .blank { display: inline-block; border-bottom: .6pt solid #000; min-width: 12mm; height: 4.2mm; vertical-align: bottom; }
+  .w8 { min-width: 8mm; } .w16 { min-width: 16mm; } .w22 { min-width: 22mm; } .w30 { min-width: 30mm; }
+  .fill { display: flex; gap: 1.2mm; align-items: flex-end; }
+  .fill .blank { flex: 1; }
+  .fill .lbl { white-space: nowrap; }
+  .opts span { display: inline-block; margin: 0 2.4mm .4mm 0; white-space: nowrap; }
+  .opts span.wrap { white-space: normal; }
+  .opts span:not(.lbl):not(.blank)::before { content: "\2610\00a0"; font-size: 10.5pt; line-height: 1; }
+  .tick span { display: block; margin: .3mm 0; }
+  .tick span::before { content: "\2610\00a0"; font-size: 10.5pt; line-height: 1; }
+  .hint { font-size: 8.2pt; color: #333; }
+  table { border-collapse: collapse; width: 100%; }
+  td, th { border: .5pt solid #000; padding: .45mm .8mm; vertical-align: top; }
+  .bind th { background: #f0f0f0; text-align: left; width: 15mm; }
+  .bind td { font-size: 6.7pt; width: 25%; }
+  .bind td b { margin-right: .6mm; }
+  .kramer { table-layout: fixed; }
+  .kramer td { font-size: 8.8pt; text-align: center; }
+  .kramer td:first-child { width: 11mm; font-weight: 700; }
+  .calc td { font-size: 9.4pt; height: 7.2mm; vertical-align: middle; }
+  .calc td:first-child { width: 52%; font-weight: 700; }
+  .aap { margin-top: .6mm; }
+  .aap th, .aap td { text-align: center; padding: .3mm .2mm; font-size: 8.4pt; }
+  .aap thead th { background: #e6e6e6; }
+  .aap .grp { background: #cfcfcf; font-size: 8.6pt; }
+  .aap tbody th { background: #f0f0f0; }
+  .aap .et { background: #f4f4f4; }
+  .aap .gap { border: 0; width: 2mm; background: transparent; }
+  .lines div { border-bottom: .6pt solid #000; height: 6mm; }
+  .sign { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 4mm; margin-top: 1.6mm; }
+  .note { font-size: 8.2pt; color: #222; margin-top: .8mm; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <h1>Neonatal Jaundice (NNJ) Clerking</h1>
+    <div class="sub">Paediatric Protocols for Malaysian Hospitals, 5th ed., ch. 21 · tick what applies, fill the blanks</div>
+  </div>
+  <div class="sub">Date <span class="blank w22"></span> Time seen <span class="blank w16"></span></div>
+</div>
+
+<div class="id">
+  <div class="fill"><span class="lbl">Name</span><span class="blank"></span></div>
+  <div class="fill"><span class="lbl">RN</span><span class="blank"></span></div>
+  <div class="fill"><span class="lbl">Mother's / father's IC</span><span class="blank"></span></div>
+  <div class="opts"><span class="lbl" style="margin-right:1.5mm">Sex</span><span>Boy</span><span>Girl</span></div>
+  <div class="fill" style="grid-column: span 2"><span class="lbl">Baby's IC</span><span class="blank"></span></div>
+</div>
+
+<div class="cols">
+<div>
+
+  <section>
+    <h2>Baby</h2>
+    <div class="row"><span class="lbl">Age at TSB</span> <span class="blank w16"></span> h &nbsp;(day <span class="blank w8"></span> of life) &nbsp; <span class="hint">day = h ÷ 24, rounded down, + 1</span></div>
+    <div class="row"><span class="lbl">Born at</span> <span class="blank w8"></span> + <span class="blank w8"></span> weeks</div>
+    <div class="row"><span class="lbl">Birth wt</span> <span class="blank w16"></span> kg &nbsp; <span class="lbl">Current wt</span> <span class="blank w16"></span> kg</div>
+    <div class="row"><span class="lbl">Weight loss</span> <span class="blank w16"></span> % &nbsp;<span class="hint">(BW − CW) ÷ BW × 100 · &gt; 7%: refer, watch closely</span></div>
+  </section>
+
+  <section>
+    <h2>History</h2>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">Mother's blood group</span>
+      <span>O +</span><span>A +</span><span>B +</span><span>AB +</span><span>Rh −ve</span><span>Unknown</span> <span class="blank w16" style="margin:0"></span>
+    </div>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">G6PD</span><span>Normal</span><span>Deficient</span><span>Pending</span></div>
+    <div class="row opts" style="white-space:nowrap"><span class="lbl" style="margin-right:1mm">CTSH</span><span>Normal</span><span>Pending</span><span>Abnormal</span> <span class="blank" style="margin:0"></span> mIU/L</div>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">Symptoms</span>
+      <span>Active, feeding well</span><span>Apnoea</span><span>Poor feeding</span><span>Feed intolerance / vomiting</span>
+      <span>Temperature instability</span><span>Lethargy</span><span>Fever</span>
+    </div>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">Feeding</span>
+      <span>EBF</span><span>Formula</span><span>Mixed</span><span>2–3 hourly</span><span>Good suckling</span><span>Poor suckling</span>
+      &nbsp;every <span class="blank w8" style="margin:0"></span> h
+    </div>
+  </section>
+
+
+  <section>
+    <h2>Examination</h2>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">General</span>
+      <span>Active, alert, good cry</span><span>Lethargic, weak cry</span><span>Pink, well hydrated</span><span>Dehydrated</span><span>Signs of sepsis</span>
+    </div>
+    <div class="row opts"><span class="lbl" style="margin-right:1mm">Per abdomen</span>
+      <span>Soft, non-distended, no HSM</span><br>
+      <span style="white-space:nowrap">Hepatomegaly <span class="blank w8" style="margin:0"></span> cm</span>
+      <span style="white-space:nowrap">Splenomegaly <span class="blank w8" style="margin:0"></span> cm</span>
+    </div>
+    <div class="row"><span class="lbl">Jaundice (Kramer)</span> <span class="hint">circle the zone · expected TSB µmol/L</span></div>
+    <table class="kramer">
+      <tr><td>None</td><td><b>1</b> Head &amp; neck<br>68–133</td><td><b>2</b> Upper trunk<br>85–204</td><td><b>3</b> Lower trunk, thighs<br>136–272</td><td><b>4</b> Arms, lower legs<br>187–306</td><td><b>5</b> Palms &amp; soles<br>≥ 306</td></tr>
+    </table>
+  </section>
+
+</div>
+<div>
+
+
+
+  <section>
+    <h2>Serum bilirubin</h2>
+    <div class="row"><span class="lbl">Neurotoxicity risk factors</span> <span class="hint">(any tick: use the "with risk factor" table)</span></div>
+    <div class="tick" style="columns:2; column-gap:3mm">
+      <span>Isoimmune haemolysis, G6PD def. or other haemolysis</span>
+      <span>Sepsis</span>
+      <span>Significant clinical instability in last 24 h</span>
+      <span>Albumin &lt; 30 g/L</span>
+      <span>None</span>
+    </div>
+    <table class="calc" style="margin-top:1mm">
+      <tr><td>PT threshold <span class="hint">(table)</span></td><td><span class="blank w16"></span> µmol/L</td></tr>
+      <tr><td>ET threshold <span class="hint">(table)</span></td><td><span class="blank w16"></span> µmol/L</td></tr>
+      <tr><td>Intensive PT = PT + 51</td><td><span class="blank w16"></span> µmol/L</td></tr>
+      <tr><td>Escalation = ET − 34</td><td><span class="blank w16"></span> µmol/L</td></tr>
+      <tr><td>TSB</td><td><span class="blank w16"></span> µmol/L</td></tr>
+      <tr><td>TSB − PT</td><td><span class="blank w16"></span> µmol/L</td></tr>
+    </table>
+    <div class="row opts" style="margin-top:1mm"><span class="lbl" style="margin-right:1mm">Action</span>
+      <span>Below PT</span><span>Within 50 of PT</span><span>Start phototherapy</span><span>Intensive phototherapy</span>
+      <span class="wrap">Escalation of care: NICU, IV + PO fluids, STAT SB / FBC / U&amp;E / GXM, TSB 2–3 hourly</span><span>Urgent ET</span>
+    </div>
+    <div class="row"><span class="lbl">Also</span></div>
+    <div class="tick">
+      <span>&lt; 24 h of life: G6PD, mother &amp; baby blood group, DAT, FBC ± PBF, retic; septic workup if infection suspected</span>
+      <span>G6PD deficient: admit till day 5 (term, BW &gt; 2.5 kg: home day 4 if TSB &lt; 160)</span>
+      <span>TSB &gt; 342 or ET done: ABR hearing test within 3 months</span>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<section>
+  <h2>AAP phototherapy (PT) and exchange (ET) thresholds, ≥ 35 weeks <span style="text-transform:none">· TSB µmol/L</span></h2>
+  <table class="aap" id="aapTable"></table>
+  <div class="note">Between rows, estimate in proportion (e.g. at 60 h take halfway between 48 h and 72 h). After 120 h use the 120 h row. Under 6 h use the 6 h row.
+    Intensive PT at PT + 51, or if TSB rises &gt; 8.5 µmol/L/h. ≤ 34 weeks: use the NICE preterm tables in the protocol.</div>
+</section>
+
+<section style="margin-bottom:0">
+  <h2>Impression and plan</h2>
+  <div class="lines"><div></div><div></div><div></div><div></div></div>
+  <div class="sign">
+    <div class="fill"><span class="lbl">Name / signature</span><span class="blank"></span></div>
+    <div class="fill"><span class="lbl">MMC</span><span class="blank"></span></div>
+    <div class="fill"><span class="lbl">Date / time</span><span class="blank"></span></div>
+  </div>
+</section>
+
+<script src="../assets/js/18-nnj.js"></script>
+<script>
+  // Two blocks side by side: no neurotoxicity risk factor | with a risk factor.
+  const weeks = [38, 37, 36, 35];
+  const label = w => (w === 38 ? '≥ 38 wk' : `${w} wk`);
+  const head = ['<thead><tr><th rowspan="3">Hours<br>of life</th>'];
+  ['No neurotoxicity risk factor', 'With a neurotoxicity risk factor'].forEach((t, i) => {
+    if (i) head.push('<th class="gap" rowspan="3"></th>');
+    head.push(`<th class="grp" colspan="8">${t}</th>`);
+  });
+  head.push('</tr><tr>');
+  [0, 1].forEach(() => weeks.forEach(w => head.push(`<th colspan="2">${label(w)}</th>`)));
+  head.push('</tr><tr>');
+  [0, 1].forEach(() => weeks.forEach(() => head.push('<th>PT</th><th class="et">ET</th>')));
+  head.push('</tr></thead>');
+  const body = ['<tbody>'];
+  NNJ_AAP_HOURS.forEach((h, r) => {
+    body.push(`<tr><th>${h === 120 ? '≥ 120' : h}</th>`);
+    ['noRisk', 'risk'].forEach((set, i) => {
+      if (i) body.push('<td class="gap"></td>');
+      weeks.forEach(w => {
+        const t = NNJ_AAP[set][w];
+        body.push(`<td>${t.pt[r]}</td><td class="et">${t.et[r]}</td>`);
+      });
+    });
+    body.push('</tr>');
+  });
+  body.push('</tbody>');
+  document.getElementById('aapTable').innerHTML = head.join('') + body.join('');
+</script>
+</body>
+</html>

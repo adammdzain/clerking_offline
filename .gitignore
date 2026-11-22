@@ -1,0 +1,13 @@
+.DS_Store
+Icon?
+*.zip
+dist/
+.tmp.*
+*.tmp
+.playwright-cli/
+new_inspect_crops/
+_vh.html
+tools/inspect_crops/
+__pycache__/
+.wrangler/
+.claude/
