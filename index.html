@@ -2656,6 +2656,13 @@
       font-weight: 500;
       color: var(--muted);
     }
+    /* Small helper note after a label, e.g. "Age  auto-filled from IC" */
+    html[data-theme] body label .label-hint {
+      margin-left: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+    }
     html[data-theme] body input[type="text"],
     html[data-theme] body input[type="number"],
     html[data-theme] body input[type="date"],
@@ -4061,8 +4068,8 @@
 
                 <!-- AMPLE History Grid (Safety Restraints Removed) -->
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                  <div class="region-row"><label>Mechanism (MOI):</label><input aria-label="MOI" type="text" id="traumaMOI" value="" /></div>
-                  <div class="region-row"><label>Last Meal Time:</label><input aria-label="Meal" type="text" id="traumaMeal" value="" /></div>
+                  <div class="region-row"><label>Mechanism (MOI)</label><input aria-label="MOI" type="text" id="traumaMOI" value="" /></div>
+                  <div class="region-row"><label>Last Meal Time</label><input aria-label="Meal" type="text" id="traumaMeal" value="" /></div>
                   <div style="grid-column:1 / -1; font-size:11px; color:var(--muted);">Allergies, medications, medical, surgical and obstetric history are entered once, in the Medical History tab.</div>
                 </div>
 
@@ -4070,12 +4077,12 @@
                 <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:4px;">
                   <div style="font-size:11.5px; font-weight:700; color:#93c5fd; margin-bottom:8px;">REGIONAL INJURY DETAILS:</div>
                   <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                    <div class="region-row"><label>Head:</label><input aria-label="Reg Head" type="text" id="traumaRegHead" value="" /></div>
-                    <div class="region-row"><label>Neck:</label><input aria-label="Reg Neck" type="text" id="traumaRegNeck" value="" /></div>
-                    <div class="region-row"><label>Chest:</label><input aria-label="Reg Chest" type="text" id="traumaRegChest" value="" /></div>
-                    <div class="region-row"><label>Abdomen:</label><input aria-label="Reg Abd" type="text" id="traumaRegAbd" value="" /></div>
-                    <div class="region-row"><label>Pelvis / G-U:</label><input aria-label="Reg Pelvis" type="text" id="traumaRegPelvis" value="" /></div>
-                    <div class="region-row"><label>Extremities:</label><input aria-label="Reg Extremities" type="text" id="traumaRegExtremities" value="" /></div>
+                    <div class="region-row"><label>Head</label><input aria-label="Reg Head" type="text" id="traumaRegHead" value="" /></div>
+                    <div class="region-row"><label>Neck</label><input aria-label="Reg Neck" type="text" id="traumaRegNeck" value="" /></div>
+                    <div class="region-row"><label>Chest</label><input aria-label="Reg Chest" type="text" id="traumaRegChest" value="" /></div>
+                    <div class="region-row"><label>Abdomen</label><input aria-label="Reg Abd" type="text" id="traumaRegAbd" value="" /></div>
+                    <div class="region-row"><label>Pelvis / G-U</label><input aria-label="Reg Pelvis" type="text" id="traumaRegPelvis" value="" /></div>
+                    <div class="region-row"><label>Extremities</label><input aria-label="Reg Extremities" type="text" id="traumaRegExtremities" value="" /></div>
                   </div>
                   <input type="hidden" id="traumaInjuries" value="" />
                   <input type="hidden" id="traumaImpression" value="" />
@@ -4453,7 +4460,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
         <span id="dictationLiveText" style="font-style:italic; color:var(--muted);">Listening... Speak naturally (supports: 'press tab', 'indent', 'comma', 'full stop', 'new line', 'bullet point')</span>
       </div>
       <div style="display:flex; gap:6px; align-items:center;">
-        <label for="dictationLangSelect" style="font-size:11px; margin:0; color:var(--muted);">Lang:</label>
+        <label for="dictationLangSelect" style="font-size:11px; margin:0; color:var(--muted);">Lang</label>
         <select id="dictationLangSelect" data-on-change="changeDictationLanguage" data-args='[]' style="padding:2px 6px; font-size:11px; width:auto; margin:0; height:auto;">
           <option value="en-MY" selected>English (Malaysia)</option>
           <option value="ms-MY">Bahasa Melayu</option>
@@ -4516,33 +4523,33 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-3">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="pat301_hospital">Hospital Name:</label>
+                <label for="pat301_hospital">Hospital Name</label>
                 <input type="text" id="pat301_hospital" placeholder="e.g. HOSPITAL LAHAD DATU">
               </div>
               <div class="pat-field">
-                <label for="pat301_wadKlinik">7. Wad / Klinik:</label>
+                <label for="pat301_wadKlinik">7. Wad / Klinik</label>
                 <input type="text" id="pat301_wadKlinik" placeholder="e.g. ED">
               </div>
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="pat301_patientName">1. Nama Pesakit:</label>
+                <label for="pat301_patientName">1. Nama Pesakit</label>
                 <input type="text" id="pat301_patientName" placeholder="Full patient name">
               </div>
               <div class="pat-field">
-                <label for="pat301_patientHospitalID">2. No. Pendaftaran (RN/MRN):</label>
+                <label for="pat301_patientHospitalID">2. No. Pendaftaran (RN/MRN)</label>
                 <input type="text" id="pat301_patientHospitalID" placeholder="e.g. RN 12345/26">
               </div>
             </div>
 
             <div class="grid-pat-4">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="pat301_patientID">3. No. K/P (IC/Passport):</label>
+                <label for="pat301_patientID">3. No. K/P (IC/Passport)</label>
                 <input type="text" id="pat301_patientID" placeholder="e.g. 901010-14-1234">
               </div>
               <div class="pat-field">
-                <label>4. Jantina:</label>
+                <label>4. Jantina</label>
                 <div class="radio-pill-group">
                   <label>
                     <input type="radio" name="pat301_gender" id="pat301_gender_m" value="male">
@@ -4555,33 +4562,33 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
                 </div>
               </div>
               <div class="pat-field">
-                <label for="pat301_patientAge">5. Umur:</label>
+                <label for="pat301_patientAge">5. Umur</label>
                 <input type="text" id="pat301_patientAge" placeholder="e.g. 35y">
               </div>
             </div>
 
             <div class="grid-pat-4">
               <div class="pat-field">
-                <label for="pat301_keturunan">6. Keturunan:</label>
+                <label for="pat301_keturunan">6. Keturunan</label>
                 <input type="text" id="pat301_keturunan" placeholder="MELAYU / CINA / etc">
               </div>
               <div class="pat-field">
-                <label for="pat301_tarikhMasuk">8. Tarikh Masuk Wad:</label>
+                <label for="pat301_tarikhMasuk">8. Tarikh Masuk Wad</label>
                 <input type="text" id="pat301_tarikhMasuk" placeholder="DD/MM/YYYY">
               </div>
               <div class="pat-field">
-                <label for="pat301_pekerjaan">9. Pekerjaan:</label>
+                <label for="pat301_pekerjaan">9. Pekerjaan</label>
                 <input type="text" id="pat301_pekerjaan" placeholder="Occupation">
               </div>
               <div class="pat-field">
-                <label for="pat301_tarafPerkahwinan">10. Taraf Kahwin:</label>
+                <label for="pat301_tarafPerkahwinan">10. Taraf Kahwin</label>
                 <input type="text" id="pat301_tarafPerkahwinan" placeholder="KAHWIN / BUJANG">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label>11. Kategori Bayaran:</label>
+                <label>11. Kategori Bayaran</label>
                 <div class="radio-pill-group">
                   <label>
                     <input type="radio" name="pat301_bayar" id="pat301_bayar_percuma" value="percuma" checked>
@@ -4594,7 +4601,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
                 </div>
               </div>
               <div class="pat-field">
-                <label for="pat301_noLaporanDahulu">12. No. Laporan Dahulu:</label>
+                <label for="pat301_noLaporanDahulu">12. No. Laporan Dahulu</label>
                 <input type="text" id="pat301_noLaporanDahulu" placeholder="Report No / NIL">
               </div>
             </div>
@@ -4611,17 +4618,17 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="pat301_ringkasanKlinikal">14. Ringkasan Klinikal, Penemuan Pembedahan &amp; Riwayat Keluarga:</label>
+              <label for="pat301_ringkasanKlinikal">14. Ringkasan Klinikal, Penemuan Pembedahan &amp; Riwayat Keluarga</label>
               <textarea id="pat301_ringkasanKlinikal" rows="6" placeholder="Concise clinical summary (HPI, examination, vitals, relevant past history)..."></textarea>
             </div>
 
             <div class="pat-field">
-              <label for="pat301_drugHistory">Drug / Chemical History &amp; Allergy (section 13):</label>
+              <label for="pat301_drugHistory">Drug / Chemical History &amp; Allergy (section 13)</label>
               <textarea id="pat301_drugHistory" rows="2" placeholder="Allergies first, then current medications"></textarea>
             </div>
 
             <div class="pat-field">
-              <label for="pat301_diagnosis">15. Diagnosis (Provisional / Final):</label>
+              <label for="pat301_diagnosis">15. Diagnosis (Provisional / Final)</label>
               <input type="text" id="pat301_diagnosis" placeholder="e.g. Dengue Fever, Community Acquired Pneumonia, etc.">
               <div class="chip-container" style="margin-top:4px;">
                 <span style="font-size:11px; color:var(--muted); align-self:center;">Quick chips:</span>
@@ -4656,7 +4663,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="pat301_test_lainLain">Lain-lain Ujian (e.g. Troponin, Blood C&amp;S, Dengue Combo, Amylase):</label>
+              <label for="pat301_test_lainLain">Lain-lain Ujian (e.g. Troponin, Blood C&amp;S, Dengue Combo, Amylase)</label>
               <input type="text" id="pat301_test_lainLain" placeholder="e.g. Cardiac Troponin I, Blood C&S x 2 pairs, Dengue Combo">
             </div>
           </div>
@@ -4670,22 +4677,22 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-4">
               <div class="pat-field">
-                <label for="pat301_tarikhSpesimen">17. Tarikh (DDMMYY):</label>
+                <label for="pat301_tarikhSpesimen">17. Tarikh (DDMMYY)</label>
                 <input type="text" id="pat301_tarikhSpesimen" placeholder="280926" maxlength="6">
               </div>
               <div class="pat-field">
-                <label for="pat301_masaSpesimen">17. Masa (HHMM):</label>
+                <label for="pat301_masaSpesimen">17. Masa (HHMM)</label>
                 <input type="text" id="pat301_masaSpesimen" placeholder="1030" maxlength="4">
               </div>
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="pat301_namaDoktor">18. Nama Doktor &amp; MMC:</label>
+                <label for="pat301_namaDoktor">18. Nama Doktor &amp; MMC</label>
                 <input type="text" id="pat301_namaDoktor" placeholder="DR. NAME (MMC: 12345)">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="pat301_tarikhPermohonan">19. Tarikh Permohonan:</label>
+                <label for="pat301_tarikhPermohonan">19. Tarikh Permohonan</label>
                 <input type="text" id="pat301_tarikhPermohonan" placeholder="DD/MM/YYYY">
               </div>
               <div class="pat-field" style="justify-content: flex-end;">
@@ -4759,7 +4766,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label>18. Perkhidmatan (Modality):</label>
+              <label>18. Perkhidmatan (Modality)</label>
               <div class="radio-pill-group" style="flex-wrap: wrap;">
                 <label><input type="radio" name="ra301_modality" value="xray" checked><span>X-Ray Am</span></label>
                 <label><input type="radio" name="ra301_modality" value="ct"><span>CT</span></label>
@@ -4775,22 +4782,22 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="ra301_bahagianPemeriksaan">Bahagian Pemeriksaan (Region / Views):</label>
+                <label for="ra301_bahagianPemeriksaan">Bahagian Pemeriksaan (Region / Views)</label>
                 <input type="text" id="ra301_bahagianPemeriksaan" placeholder="e.g. CHEST X-RAY (PA VIEW)">
               </div>
               <div class="pat-field">
-                <label for="ra301_komen">Komen / Arahan Tambahan:</label>
+                <label for="ra301_komen">Komen / Arahan Tambahan</label>
                 <input type="text" id="ra301_komen" placeholder="e.g. Erect PA / IV Contrast / Portable">
               </div>
             </div>
 
             <div class="grid-pat-2" style="background: rgba(255, 255, 255, 0.02); padding: 8px; border-radius: 6px;">
               <div class="pat-field">
-                <label for="ra301_kontrasJenama">*22. Media Kontras - Jenama:</label>
+                <label for="ra301_kontrasJenama">*22. Media Kontras - Jenama</label>
                 <input type="text" id="ra301_kontrasJenama" placeholder="e.g. Omnipaque / Ultravist">
               </div>
               <div class="pat-field">
-                <label for="ra301_kontrasIsipadu">Isipadu Media Kontras (ml):</label>
+                <label for="ra301_kontrasIsipadu">Isipadu Media Kontras (ml)</label>
                 <input type="text" id="ra301_kontrasIsipadu" placeholder="e.g. 50">
               </div>
             </div>
@@ -4805,37 +4812,37 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-3">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="ra301_hospital">Hospital / Klinik:</label>
+                <label for="ra301_hospital">Hospital / Klinik</label>
                 <input type="text" id="ra301_hospital" placeholder="e.g. HOSPITAL LAHAD DATU">
               </div>
               <div class="pat-field">
-                <label for="ra301_wadKlinik">10. Wad / Klinik / A&amp;E:</label>
+                <label for="ra301_wadKlinik">10. Wad / Klinik / A&amp;E</label>
                 <input type="text" id="ra301_wadKlinik" placeholder="e.g. ED">
               </div>
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="ra301_patientName">1. Nama Penuh (Huruf Besar):</label>
+                <label for="ra301_patientName">1. Nama Penuh (Huruf Besar)</label>
                 <input type="text" id="ra301_patientName" placeholder="Full patient name">
               </div>
               <div class="pat-field">
-                <label for="ra301_disiplin">11. Disiplin:</label>
+                <label for="ra301_disiplin">11. Disiplin</label>
                 <input type="text" id="ra301_disiplin" value="KECEMASAN" placeholder="e.g. KECEMASAN / SURGERI">
               </div>
             </div>
 
             <div class="grid-ra301-identity">
               <div class="pat-field">
-                <label for="ra301_patientID">2. No. Kad Pengenalan / Pasport:</label>
+                <label for="ra301_patientID">2. No. Kad Pengenalan / Pasport</label>
                 <input type="text" id="ra301_patientID" placeholder="e.g. 920515-14-5555">
               </div>
               <div class="pat-field">
-                <label for="ra301_tarikhLahir">4. Tarikh Lahir (DDMMYYYY):</label>
+                <label for="ra301_tarikhLahir">4. Tarikh Lahir (DDMMYYYY)</label>
                 <input type="text" id="ra301_tarikhLahir" placeholder="15051992" maxlength="8">
               </div>
               <div class="pat-field">
-                <label>5. Jantina:</label>
+                <label>5. Jantina</label>
                 <div class="radio-pill-group">
                   <label>
                     <input type="radio" name="ra301_gender" id="ra301_gender_m" value="male">
@@ -4851,25 +4858,25 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-4">
               <div class="pat-field">
-                <label for="ra301_patientPhone">6. No. Telefon:</label>
+                <label for="ra301_patientPhone">6. No. Telefon</label>
                 <input type="text" id="ra301_patientPhone" placeholder="Contact number">
               </div>
               <div class="pat-field">
-                <label for="ra301_keturunan">7. Etnik:</label>
+                <label for="ra301_keturunan">7. Etnik</label>
                 <input type="text" id="ra301_keturunan" placeholder="MELAYU / CINA / etc">
               </div>
               <div class="pat-field">
-                <label for="ra301_patientAge">8. Umur:</label>
+                <label for="ra301_patientAge">8. Umur</label>
                 <input type="text" id="ra301_patientAge" placeholder="e.g. 34y">
               </div>
               <div class="pat-field">
-                <label for="ra301_patientHospitalID">9. No. Daftar (RN/MRN):</label>
+                <label for="ra301_patientHospitalID">9. No. Daftar (RN/MRN)</label>
                 <input type="text" id="ra301_patientHospitalID" placeholder="e.g. RN 789101/26">
               </div>
             </div>
 
             <div class="pat-field">
-              <label for="ra301_patientAddress">3. Alamat Kediaman:</label>
+              <label for="ra301_patientAddress">3. Alamat Kediaman</label>
               <input type="text" id="ra301_patientAddress" placeholder="Residential address">
             </div>
           </div>
@@ -4883,18 +4890,18 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-3">
               <div class="pat-field">
-                <label for="ra301_lmp">12. LMP (Jika berkaitan):</label>
+                <label for="ra301_lmp">12. LMP (Jika berkaitan)</label>
                 <input type="text" id="ra301_lmp" placeholder="N/A (Lelaki) / DD/MM/YYYY">
               </div>
               <div class="pat-field">
-                <label>*13. Mengandung:</label>
+                <label>*13. Mengandung</label>
                 <div class="radio-pill-group">
                   <label><input type="radio" name="ra301_mengandung" id="ra301_mengandung_ya" value="ya"><span>Ya</span></label>
                   <label><input type="radio" name="ra301_mengandung" id="ra301_mengandung_tidak" value="tidak"><span>Tidak</span></label>
                 </div>
               </div>
               <div class="pat-field">
-                <label>15. Mobile (X-Ray Mudah Alih):</label>
+                <label>15. Mobile (X-Ray Mudah Alih)</label>
                 <div class="radio-pill-group">
                   <label><input type="radio" name="ra301_mobile" id="ra301_mobile_ya" value="ya"><span>Ya</span></label>
                   <label><input type="radio" name="ra301_mobile" id="ra301_mobile_tidak" value="tidak" checked><span>Tidak</span></label>
@@ -4903,27 +4910,27 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="ra301_asmaAlahan">14. Asma / Alahan / Reaksi Media Kontras (Nyatakan):</label>
+              <label for="ra301_asmaAlahan">14. Asma / Alahan / Reaksi Media Kontras (Nyatakan)</label>
               <input type="text" id="ra301_asmaAlahan" placeholder="e.g. NKDA / Tiada Asma / Penicillin Allergy">
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field">
-                <label>16. Warganegara:</label>
+                <label>16. Warganegara</label>
                 <div class="radio-pill-group">
                   <label><input type="radio" name="ra301_warga" id="ra301_warga_ya" value="ya" checked><span>Ya</span></label>
                   <label><input type="radio" name="ra301_warga" id="ra301_warga_tidak" value="tidak"><span>Tidak</span></label>
                 </div>
               </div>
               <div class="pat-field">
-                <label>16. Penjawat Awam:</label>
+                <label>16. Penjawat Awam</label>
                 <div class="radio-pill-group">
                   <label><input type="radio" name="ra301_penjawat" id="ra301_penjawat_ya" value="ya"><span>Ya</span></label>
                   <label><input type="radio" name="ra301_penjawat" id="ra301_penjawat_tidak" value="tidak" checked><span>Tidak</span></label>
                 </div>
               </div>
               <div class="pat-field">
-                <label>16. FPP:</label>
+                <label>16. FPP</label>
                 <div class="radio-pill-group">
                   <label><input type="radio" name="ra301_fpp" id="ra301_fpp_ya" value="ya"><span>Ya</span></label>
                   <label><input type="radio" name="ra301_fpp" id="ra301_fpp_tidak" value="tidak" checked><span>Tidak</span></label>
@@ -4933,7 +4940,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <!-- Renal Function -->
             <div class="pat-field" style="margin-top:4px;">
-              <label>17. Renal Function (Pre-Contrast Safety):</label>
+              <label>17. Renal Function (Pre-Contrast Safety)</label>
               <div class="grid-pat-3">
                 <input aria-label="Renal Date" type="text" id="ra301_renalDate" placeholder="Tarikh (e.g. 28/09/2026)">
                 <input aria-label="Renal Creatinine" type="text" id="ra301_renalCreatinine" placeholder="Creatinine (e.g. 78 umol/L)">
@@ -4953,7 +4960,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="ra301_ringkasanKlinikal">Ringkasan Klinikal (Clinical Presentation, Vitals, Exam, Provisional Diagnosis &amp; Question to Radiologist):</label>
+              <label for="ra301_ringkasanKlinikal">Ringkasan Klinikal (Clinical Presentation, Vitals, Exam, Provisional Diagnosis &amp; Question to Radiologist)</label>
               <textarea id="ra301_ringkasanKlinikal" rows="6" placeholder="Clinical presentation, examination, provisional diagnosis, and specific question to radiologist..."></textarea>
             </div>
           </div>
@@ -4967,11 +4974,11 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="ra301_namaDoktor">Nama Doktor &amp; MMC:</label>
+                <label for="ra301_namaDoktor">Nama Doktor &amp; MMC</label>
                 <input type="text" id="ra301_namaDoktor" placeholder="DR. NAME (MMC: 12345)">
               </div>
               <div class="pat-field">
-                <label for="ra301_tarikhMasa">Tarikh &amp; Masa Permohonan:</label>
+                <label for="ra301_tarikhMasa">Tarikh &amp; Masa Permohonan</label>
                 <input type="text" id="ra301_tarikhMasa" placeholder="DD/MM/YYYY HH:MM AM/PM">
               </div>
             </div>
@@ -5047,33 +5054,33 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_hospital">Hospital Rujukan:</label>
+                <label for="rujukan_hospital">Hospital Rujukan</label>
                 <input type="text" id="rujukan_hospital" placeholder="e.g. HOSPITAL LAHAD DATU">
               </div>
               <div class="pat-field">
-                <label for="rujukan_tarikhTemujanji">Tarikh Temujanji (Kotak Atas Kanan):</label>
+                <label for="rujukan_tarikhTemujanji">Tarikh Temujanji (Kotak Atas Kanan)</label>
                 <input type="text" id="rujukan_tarikhTemujanji" placeholder="e.g. ACUTE (ED ADMISSION) / TCA 2 WEEKS">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_kepada">Kepada:</label>
+                <label for="rujukan_kepada">Kepada</label>
                 <input type="text" id="rujukan_kepada" placeholder="e.g. Pegawai Perubatan / Pakar Yang Menjaga">
               </div>
               <div class="pat-field">
-                <label for="rujukan_jabatanUnit">Jabatan / Unit:</label>
+                <label for="rujukan_jabatanUnit">Jabatan / Unit</label>
                 <input type="text" id="rujukan_jabatanUnit" placeholder="e.g. Jabatan Pembedahan Am">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_tarikh">Tarikh Rujukan:</label>
+                <label for="rujukan_tarikh">Tarikh Rujukan</label>
                 <input type="text" id="rujukan_tarikh" placeholder="DD/MM/YYYY">
               </div>
               <div class="pat-field">
-                <label for="rujukan_masa">Masa Rujukan:</label>
+                <label for="rujukan_masa">Masa Rujukan</label>
                 <div style="display:flex; gap:6px;">
                   <input type="text" id="rujukan_masa" placeholder="HH:MM AM/PM">
                   <button type="button" class="chip-btn" aria-label="Set to current time" style="padding:0 12px;" data-on-click="setRujukanTimeToNow" data-args='[]'>Now</button>
@@ -5090,33 +5097,33 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_patientName">Nama Pesakit:</label>
+                <label for="rujukan_patientName">Nama Pesakit</label>
                 <input type="text" id="rujukan_patientName" placeholder="Full patient name">
               </div>
               <div class="pat-field">
-                <label for="rujukan_patientAge">Umur:</label>
+                <label for="rujukan_patientAge">Umur</label>
                 <input type="text" id="rujukan_patientAge" placeholder="e.g. 34y">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_patientID">No. K/P (IC) / Pasport:</label>
+                <label for="rujukan_patientID">No. K/P (IC) / Pasport</label>
                 <input type="text" id="rujukan_patientID" placeholder="e.g. 920515-14-5555">
               </div>
               <div class="pat-field">
-                <label for="rujukan_patientGender">Jantina:</label>
+                <label for="rujukan_patientGender">Jantina</label>
                 <input type="text" id="rujukan_patientGender" placeholder="Lelaki / Perempuan">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_noRujukanTuan">No. Rujukan Tuan:</label>
+                <label for="rujukan_noRujukanTuan">No. Rujukan Tuan</label>
                 <input type="text" id="rujukan_noRujukanTuan" value="NIL" placeholder="NIL / Ref No">
               </div>
               <div class="pat-field">
-                <label for="rujukan_patientHospitalID">No. Rujukan Kami (RN / Hospital ID):</label>
+                <label for="rujukan_patientHospitalID">No. Rujukan Kami (RN / Hospital ID)</label>
                 <input type="text" id="rujukan_patientHospitalID" placeholder="e.g. RN 2026/09988">
               </div>
             </div>
@@ -5133,12 +5140,12 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="rujukan_tajuk">Tajuk Rujukan (Reason for Referral):</label>
+              <label for="rujukan_tajuk">Tajuk Rujukan (Reason for Referral)</label>
               <input type="text" id="rujukan_tajuk" placeholder="e.g. ACUTE APPENDICITIS FOR SURGICAL ASSESSMENT &amp; ADMISSION">
             </div>
 
             <div class="pat-field">
-              <label for="rujukan_kandungan">Kandungan Surat Rujukan (History, Vitals, Exam, Labs, Diagnosis, ED Rx &amp; Plan):</label>
+              <label for="rujukan_kandungan">Kandungan Surat Rujukan (History, Vitals, Exam, Labs, Diagnosis, ED Rx &amp; Plan)</label>
               <textarea id="rujukan_kandungan" rows="12" placeholder="Tuan / Puan,&#10;&#10;Merujuk kepada perkara di atas, pesakit tersebut dirujuk kepada pihak tuan..."></textarea>
             </div>
           </div>
@@ -5151,11 +5158,11 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="rujukan_namaDoktor">Nama Doktor &amp; MMC:</label>
+                <label for="rujukan_namaDoktor">Nama Doktor &amp; MMC</label>
                 <input type="text" id="rujukan_namaDoktor" placeholder="DR. NAME (MMC: 12345)">
               </div>
               <div class="pat-field">
-                <label for="rujukan_jawatan">Jawatan:</label>
+                <label for="rujukan_jawatan">Jawatan</label>
                 <input type="text" id="rujukan_jawatan" value="Pegawai Perubatan (Medical Officer)" placeholder="Pegawai Perubatan">
               </div>
             </div>
@@ -5231,44 +5238,44 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-3">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="bt105_hospital">Hospital:</label>
+                <label for="bt105_hospital">Hospital</label>
                 <input type="text" id="bt105_hospital" placeholder="e.g. HOSPITAL LAHAD DATU">
               </div>
               <div class="pat-field">
-                <label for="bt105_unit">Unit:</label>
+                <label for="bt105_unit">Unit</label>
                 <input type="text" id="bt105_unit" placeholder="e.g. KECEMASAN">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field" style="grid-column: span 2;">
-                <label for="bt105_patientName">Nama (Tulis huruf besar):</label>
+                <label for="bt105_patientName">Nama (Tulis huruf besar)</label>
                 <input type="text" id="bt105_patientName" placeholder="Full patient name (will be printed UPPERCASE)">
               </div>
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field">
-                <label for="bt105_patientID">No. Kad Pengenalan (12 digit):</label>
+                <label for="bt105_patientID">No. Kad Pengenalan (12 digit)</label>
                 <input type="text" id="bt105_patientID" placeholder="e.g. 900101014234 (digits go into the 12 boxes)">
               </div>
               <div class="pat-field">
-                <label for="bt105_patientHospitalID">No. Daftar (RN/MRN):</label>
+                <label for="bt105_patientHospitalID">No. Daftar (RN/MRN)</label>
                 <input type="text" id="bt105_patientHospitalID" placeholder="e.g. RN 123456/26">
               </div>
               <div class="pat-field">
-                <label for="bt105_wad">Wad:</label>
+                <label for="bt105_wad">Wad</label>
                 <input type="text" id="bt105_wad" placeholder="e.g. ED">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="bt105_patientAge">Umur:</label>
+                <label for="bt105_patientAge">Umur</label>
                 <input type="text" id="bt105_patientAge" placeholder="e.g. 36y">
               </div>
               <div class="pat-field">
-                <label>Jantina:</label>
+                <label>Jantina</label>
                 <div class="radio-pill-group">
                   <label>
                     <input type="radio" name="bt105_gender" id="bt105_gender_m" value="male">
@@ -5291,22 +5298,22 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="bt105_pakarPerunding">Pakar Perunding:</label>
+                <label for="bt105_pakarPerunding">Pakar Perunding</label>
                 <input type="text" id="bt105_pakarPerunding" placeholder="e.g. DR. AHMAD (CONSULTANT)">
               </div>
               <div class="pat-field">
-                <label for="bt105_hb">Hb % / Keputusan lain:</label>
+                <label for="bt105_hb">Hb % / Keputusan lain</label>
                 <input type="text" id="bt105_hb" placeholder="e.g. 7.2">
               </div>
             </div>
 
             <div class="pat-field">
-              <label for="bt105_diagnosa">Diagnosa:</label>
+              <label for="bt105_diagnosa">Diagnosa</label>
               <input type="text" id="bt105_diagnosa" placeholder="e.g. SEVERE ANAEMIA SECONDARY TO BLOOD LOSS">
             </div>
 
             <div class="pat-field">
-              <label for="bt105_sebabTransfusi">Sebab transfusi komponen darah:</label>
+              <label for="bt105_sebabTransfusi">Sebab transfusi komponen darah</label>
               <textarea id="bt105_sebabTransfusi" rows="2" placeholder="e.g. Hb drop, symptomatic anaemia..."></textarea>
             </div>
           </div>
@@ -5320,37 +5327,37 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="bt105_qty_wholeBlood">Whole Blood (units/mls):</label>
+                <label for="bt105_qty_wholeBlood">Whole Blood (units/mls)</label>
                 <input type="text" id="bt105_qty_wholeBlood" placeholder="e.g. 2 units">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_packedCells">Packed Cells (units/mls):</label>
+                <label for="bt105_qty_packedCells">Packed Cells (units/mls)</label>
                 <input type="text" id="bt105_qty_packedCells" placeholder="e.g. 2 units">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_paedipack">Paedipack (units/mls):</label>
+                <label for="bt105_qty_paedipack">Paedipack (units/mls)</label>
                 <input type="text" id="bt105_qty_paedipack" placeholder="e.g. 1 unit">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_plateletConcentrate">Platelet Concentrate:</label>
+                <label for="bt105_qty_plateletConcentrate">Platelet Concentrate</label>
                 <input type="text" id="bt105_qty_plateletConcentrate" placeholder="e.g. 4 pools">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_cryoprecipitate">Cryoprecipitate:</label>
+                <label for="bt105_qty_cryoprecipitate">Cryoprecipitate</label>
                 <input type="text" id="bt105_qty_cryoprecipitate" placeholder="e.g. 5 units">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_ffp">Fresh Frozen Plasma:</label>
+                <label for="bt105_qty_ffp">Fresh Frozen Plasma</label>
                 <input type="text" id="bt105_qty_ffp" placeholder="e.g. 2 units">
               </div>
               <div class="pat-field">
-                <label for="bt105_qty_cryosupernatant">Cryosupernatant:</label>
+                <label for="bt105_qty_cryosupernatant">Cryosupernatant</label>
                 <input type="text" id="bt105_qty_cryosupernatant" placeholder="e.g. 2 units">
               </div>
             </div>
 
             <div class="pat-field" style="background: rgba(255, 255, 255, 0.02); padding: 8px; border-radius: 6px;">
-              <label>Special Requirement (tick on form):</label>
+              <label>Special Requirement (tick on form)</label>
               <div class="radio-pill-group" style="flex-wrap: wrap;">
                 <label><input type="checkbox" id="bt105_sp_washed"><span>Washed</span></label>
                 <label><input type="checkbox" id="bt105_sp_filtered"><span>Filtered</span></label>
@@ -5382,17 +5389,17 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="bt105_sampelLabelBy">Sampel darah diambil dan dilabel oleh:</label>
+              <label for="bt105_sampelLabelBy">Sampel darah diambil dan dilabel oleh</label>
               <input type="text" id="bt105_sampelLabelBy" placeholder="Name of person taking &amp; labelling the sample">
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label for="bt105_tarikh">Tarikh (auto-filled):</label>
+                <label for="bt105_tarikh">Tarikh (auto-filled)</label>
                 <input type="text" id="bt105_tarikh" placeholder="DD/MM/YYYY">
               </div>
               <div class="pat-field">
-                <label for="bt105_waktu">Waktu (auto-filled, 24h):</label>
+                <label for="bt105_waktu">Waktu (auto-filled, 24h)</label>
                 <input type="text" id="bt105_waktu" placeholder="HH:MM">
               </div>
             </div>
@@ -5466,43 +5473,43 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="fisio_patientName">Name:</label>
+              <label for="fisio_patientName">Name</label>
               <input type="text" id="fisio_patientName" placeholder="Full patient name (will be printed UPPERCASE)">
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field">
-                <label for="fisio_patientID">IC. No / Passport:</label>
+                <label for="fisio_patientID">IC. No / Passport</label>
                 <input type="text" id="fisio_patientID" placeholder="e.g. 900101-01-4234">
               </div>
               <div class="pat-field">
-                <label for="fisio_patientHospitalID">RN No:</label>
+                <label for="fisio_patientHospitalID">RN No</label>
                 <input type="text" id="fisio_patientHospitalID" placeholder="e.g. RN 123456/26">
               </div>
               <div class="pat-field">
-                <label for="fisio_patientAge">Age:</label>
+                <label for="fisio_patientAge">Age</label>
                 <input type="text" id="fisio_patientAge" placeholder="e.g. 36y">
               </div>
             </div>
 
             <div class="grid-pat-3">
               <div class="pat-field">
-                <label for="fisio_patientDOB">Date of Birth:</label>
+                <label for="fisio_patientDOB">Date of Birth</label>
                 <input type="text" id="fisio_patientDOB" placeholder="DD/MM/YYYY">
               </div>
               <div class="pat-field">
-                <label for="fisio_patientRace">Race:</label>
+                <label for="fisio_patientRace">Race</label>
                 <input type="text" id="fisio_patientRace" placeholder="e.g. MELAYU">
               </div>
               <div class="pat-field">
-                <label for="fisio_clinicWard">Clinic / Unit / Ward:</label>
+                <label for="fisio_clinicWard">Clinic / Unit / Ward</label>
                 <input type="text" id="fisio_clinicWard" placeholder="e.g. ED">
               </div>
             </div>
 
             <div class="grid-pat-2">
               <div class="pat-field">
-                <label>Jantina / Gender:</label>
+                <label>Jantina / Gender</label>
                 <div class="radio-pill-group">
                   <label>
                     <input type="radio" name="fisio_gender" id="fisio_gender_m" value="male">
@@ -5515,13 +5522,13 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
                 </div>
               </div>
               <div class="pat-field">
-                <label for="fisio_patientPhone">Telephone No / HP:</label>
+                <label for="fisio_patientPhone">Telephone No / HP</label>
                 <input type="text" id="fisio_patientPhone" placeholder="e.g. 012-3456789">
               </div>
             </div>
 
             <div class="pat-field">
-              <label for="fisio_patientAddress">Address:</label>
+              <label for="fisio_patientAddress">Address</label>
               <input type="text" id="fisio_patientAddress" placeholder="Patient's home address">
             </div>
           </div>
@@ -5534,17 +5541,17 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
             </div>
 
             <div class="pat-field">
-              <label for="fisio_historyDiagnosis">Patient's History &amp; Diagnosis:</label>
+              <label for="fisio_historyDiagnosis">Patient's History &amp; Diagnosis</label>
               <textarea id="fisio_historyDiagnosis" rows="3" placeholder="e.g. CA right lung with bone metastasis, of the cervical spine"></textarea>
             </div>
 
             <div class="pat-field">
-              <label for="fisio_investigations">Investigations:</label>
+              <label for="fisio_investigations">Investigations</label>
               <textarea id="fisio_investigations" rows="2" placeholder="e.g. X-ray C-spine: lytic lesion C5; MRI pending"></textarea>
             </div>
 
             <div class="pat-field">
-              <label for="fisio_precautions">Precautions if any:</label>
+              <label for="fisio_precautions">Precautions if any</label>
               <input type="text" id="fisio_precautions" placeholder="e.g. Spinal instability — log roll precautions">
             </div>
           </div>

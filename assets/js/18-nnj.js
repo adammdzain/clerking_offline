@@ -149,7 +149,7 @@ function nnjBindTotal() {
 function renderBindField(container, field) {
   const label = document.createElement('label');
   label.htmlFor = field.id;
-  label.textContent = field.label + ':';
+  label.textContent = field.label;
   const wrap = document.createElement('div');
   wrap.className = 'nnj-bind';
   const picked = { MS: null, T: null, C: null };
@@ -240,7 +240,7 @@ function nnjBox(wide) {
 }
 function nnjHeading(field) {
   const label = document.createElement('label');
-  label.textContent = field.label + ':';
+  label.textContent = field.label;
   return label;
 }
 function nnjReadout(id) {

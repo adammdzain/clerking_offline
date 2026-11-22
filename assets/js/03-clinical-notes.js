@@ -168,7 +168,7 @@ function renderSliderField(container, field) {
 
   const lbl = document.createElement('label');
   lbl.htmlFor = field.id;
-  lbl.textContent = field.label + ':';
+  lbl.textContent = field.label;
 
   const readout = document.createElement('span');
   readout.className = 'vital-slider-readout';
@@ -556,7 +556,7 @@ function renderGCSField(container, field) {
 
   const lbl = document.createElement('label');
   lbl.htmlFor = field.id;
-  lbl.textContent = field.label + ':';
+  lbl.textContent = field.label;
 
   const readout = document.createElement('span');
   readout.className = 'vital-slider-readout';
@@ -759,7 +759,11 @@ function initGCSWidget(field, input, container, widget, readout) {
 // The age boxes fill the calculated age; only the calculated age goes into the note.
 function renderAgeField(container, field) {
   const heading = document.createElement('label');
-  heading.textContent = 'Age Breakdown (Manual / Auto from IC):';
+  heading.textContent = 'Age';
+  const hint = document.createElement('span');
+  hint.className = 'label-hint';
+  hint.textContent = 'auto-filled from IC';
+  heading.appendChild(hint);
   const grid = document.createElement('div');
   grid.className = 'grid-4';
   grid.id = 'ageFields';
@@ -783,7 +787,7 @@ function renderAgeField(container, field) {
 
   const label = document.createElement('label');
   label.htmlFor = field.id;
-  label.textContent = field.label + ':';
+  label.textContent = field.label;
   const output = document.createElement('input');
   output.type = 'text';
   output.id = field.id;
@@ -797,7 +801,7 @@ function renderAgeField(container, field) {
 function renderPlainField(container, field) {
   const label = document.createElement('label');
   label.htmlFor = field.id;
-  label.textContent = field.label + ':';
+  label.textContent = field.label;
   container.appendChild(label);
 
   if (field.chips && field.chips.length) {
