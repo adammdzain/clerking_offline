@@ -15,7 +15,9 @@ async function renderPdfToCanvasContainer(pdfBytes, containerEl, iframeFallbackE
       if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = './assets/pdf.worker.min.js';
       }
-      const loadingTask = pdfjsLib.getDocument({ data: pdfBytes });
+      // isEvalSupported: false stops pdf.js 3.x compiling font code with new Function
+      // (CVE-2024-4367, crafted-font code execution), whatever PDF is shown.
+      const loadingTask = pdfjsLib.getDocument({ data: pdfBytes, isEvalSupported: false });
       const pdfDoc = await loadingTask.promise;
 
       if (containerEl._renderSeq !== renderSeq) return false;
