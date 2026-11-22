@@ -94,6 +94,8 @@ function cbRefresh() {
     line.classList.toggle('has-data', !!summary);
     status.classList.toggle('is-done', done);
     status.classList.toggle('is-draft', !done && !!summary);
+    const word = done ? 'In note' : summary ? 'Not inserted' : 'Empty';
+    status.querySelector('.cb-status-text').textContent = word;
     status.setAttribute('aria-label', done ? 'In note' : summary ? 'Not inserted yet' : 'Nothing entered');
   });
   document.getElementById('cbPatient').textContent = cbPatientLine();
@@ -234,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const status = document.createElement('span');
     status.className = 'cb-status';
     status.setAttribute('role', 'img');
-    status.innerHTML = CB_STATUS_ICON;
+    status.innerHTML = `${CB_STATUS_ICON}<span class="cb-status-text" aria-hidden="true"></span>`;
     const summary = document.createElement('span');
     summary.className = 'cb-summary';
     button.insertBefore(status, button.querySelector('.arrow'));

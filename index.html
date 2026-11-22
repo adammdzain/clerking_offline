@@ -50,10 +50,7 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(96, 165, 250, .08), transparent 60%),
-        radial-gradient(900px 500px at 110% 10%, rgba(52, 211, 153, .06), transparent 60%),
-        linear-gradient(180deg, #0a0f18, var(--bg));
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       padding: var(--pad);
@@ -85,7 +82,7 @@
       font-weight: 700;
       letter-spacing: .06em;
       color: #051026;
-      background: linear-gradient(180deg, #93c5fd, #60a5fa);
+      background: #60a5fa;
       padding: 3px 10px;
       border-radius: 999px;
       text-transform: uppercase;
@@ -107,14 +104,12 @@
       user-select: none;
       background: var(--bg);
       border: 1px solid rgba(59, 130, 246, .22);
-      box-shadow: 0 0 16px -2px rgba(30, 58, 138, .4), 0 4px 12px rgba(0, 0, 0, .35);
       animation: rise .28s ease both;
-      transition: all .2s ease;
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
     }
 
     .main-section:hover {
       border-color: rgba(59, 130, 246, .35);
-      box-shadow: 0 0 20px -2px rgba(30, 58, 138, .55), 0 6px 16px rgba(0, 0, 0, .4);
     }
 
     
@@ -132,23 +127,20 @@
       font-weight: 600;
       letter-spacing: .01em;
       border-radius: var(--radius-md);
-      transition: all .2s ease;
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 0 12px -2px rgba(30, 58, 138, .35);
     }
 
     .main-collapsible:hover {
       background: rgba(30, 58, 138, .12);
       border-color: rgba(96, 165, 250, .45);
-      box-shadow: 0 0 16px rgba(37, 99, 235, .35);
     }
 
     .main-collapsible.active {
       background: rgba(30, 58, 138, .18);
       border-color: rgba(96, 165, 250, .5);
-      box-shadow: 0 0 18px rgba(37, 99, 235, .45);
     }
 
     .arrow {
@@ -199,11 +191,10 @@
       background: var(--panel-2);
       padding: 12px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
     }
 
     .collapsible {
-      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+      background: rgba(255, 255, 255, .03);
       color: var(--text);
       cursor: pointer;
       padding: 14px 16px;
@@ -288,18 +279,11 @@
     input:focus,
     textarea:focus {
       border-color: rgba(96, 165, 250, .6);
-      box-shadow: 0 0 0 3px rgba(96, 165, 250, .18);
       background: #0d1628;
     }
 
     select {
       appearance: none;
-      background-image:
-        linear-gradient(45deg, transparent 50%, #93c5fd 50%),
-        linear-gradient(135deg, #93c5fd 50%, transparent 50%),
-        linear-gradient(to right, #0b1220, #0b1220);
-      background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 12px) calc(50% - 2px), calc(100% - 2.2rem) 0.3rem;
-      background-size: 6px 6px, 6px 6px, 1px 1.8rem;
       background-repeat: no-repeat;
       padding-right: 36px;
     }
@@ -344,14 +328,12 @@
       line-height: 1.6;
       tab-size: 4;
       -moz-tab-size: 4;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, .3);
       outline: none;
       transition: border-color .2s ease, box-shadow .2s ease;
     }
 
     textarea:focus {
       border-color: rgba(96, 165, 250, .5);
-      box-shadow: 0 0 12px rgba(37, 99, 235, .3), inset 0 2px 4px rgba(0, 0, 0, .3);
     }
 
     #notesPrintPages {
@@ -376,8 +358,7 @@
       font-weight: 700;
       letter-spacing: .02em;
       cursor: pointer;
-      box-shadow: none;
-      transition: all .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
       user-select: none;
     }
 
@@ -388,10 +369,9 @@
     }
 
     .chip-btn.active {
-      background: linear-gradient(180deg, #3b82f6, #2563eb);
+      background: #2563eb;
       color: #ffffff;
       border-color: #60a5fa;
-      box-shadow: 0 2px 10px rgba(59, 130, 246, .4);
     }
 
     /* Vital Signs Interactive Sliders */
@@ -421,7 +401,7 @@
       border-radius: 999px;
       background: rgba(148, 163, 184, 0.1);
       border: 1px solid rgba(148, 163, 184, 0.2);
-      transition: all 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
       min-width: 28px;
       text-align: right;
       font-variant-numeric: tabular-nums;
@@ -433,7 +413,6 @@
       color: #93c5fd;
       background: rgba(37, 99, 235, 0.25);
       border-color: rgba(96, 165, 250, 0.45);
-      box-shadow: 0 0 8px rgba(37, 99, 235, 0.25);
     }
 
     .vital-slider-widget {
@@ -460,7 +439,6 @@
       height: 8px;
       background: rgba(255, 255, 255, 0.12);
       border-radius: 999px;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
       overflow: visible;
     }
 
@@ -468,7 +446,7 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      background: #3b82f6;
       border-radius: 999px;
       pointer-events: none;
       opacity: 0.35;
@@ -477,7 +455,6 @@
 
     .vital-slider-fill.is-active {
       opacity: 1;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.55);
     }
 
     .vital-slider-thumb {
@@ -494,7 +471,6 @@
       justify-content: center;
       cursor: grab;
       touch-action: none;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.2);
       transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.15s ease, background 0.15s ease;
       z-index: 2;
       outline: none;
@@ -513,14 +489,12 @@
     .vital-slider-thumb:hover,
     .vital-slider-thumb:focus-visible {
       border-color: #93c5fd;
-      box-shadow: 0 0 0 5px rgba(96, 165, 250, 0.25), 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     .vital-slider-thumb.is-dragging {
       cursor: grabbing;
       transform: translate(-50%, -50%) scale(1.18);
       border-color: #93c5fd;
-      box-shadow: 0 0 0 7px rgba(96, 165, 250, 0.35), 0 4px 12px rgba(0, 0, 0, 0.6);
       z-index: 5;
     }
 
@@ -528,14 +502,12 @@
     .vital-slider-thumb.thumb-sys:hover,
     .vital-slider-thumb.thumb-sys.is-dragging {
       border-color: #7dd3fc;
-      box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.3);
     }
 
     
     .vital-slider-thumb.thumb-dia:hover,
     .vital-slider-thumb.thumb-dia.is-dragging {
       border-color: #6ee7b7;
-      box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.3);
     }
 
     .vital-thumb-tag {
@@ -625,7 +597,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       touch-action: manipulation;
     }
 
@@ -639,7 +611,6 @@
       background: #2563eb;
       color: #ffffff;
       border-color: #60a5fa;
-      box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
       font-weight: 700;
     }
 
@@ -660,8 +631,7 @@
       font-weight: 600;
       font-size: 12.5px;
       letter-spacing: .01em;
-      transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 0 12px -2px rgba(30, 58, 138, .5), 0 0 4px rgba(37, 99, 235, .25);
+      transition: background-color .2s cubic-bezier(0.16, 1, 0.3, 1), border-color .2s cubic-bezier(0.16, 1, 0.3, 1), color .2s cubic-bezier(0.16, 1, 0.3, 1), transform .2s cubic-bezier(0.16, 1, 0.3, 1);
       display: inline-flex;
       align-items: center;
       justify-content: space-between;
@@ -671,13 +641,11 @@
     button:hover {
       background: rgba(30, 58, 138, .18);
       border-color: rgba(96, 165, 250, .5);
-      box-shadow: 0 0 16px rgba(37, 99, 235, .4), 0 0 6px rgba(59, 130, 246, .3);
       transform: translateY(-1px);
     }
 
     button:active {
       transform: translateY(1px);
-      box-shadow: 0 0 6px rgba(37, 99, 235, .3);
     }
 
     .btn-icon {
@@ -694,7 +662,6 @@
     button.btn-primary:hover {
       background: rgba(37, 99, 235, .15);
       border-color: #93c5fd;
-      box-shadow: 0 0 18px rgba(59, 130, 246, .6);
     }
 
     
@@ -702,7 +669,6 @@
     button.btn-secondary:hover {
       background: rgba(30, 58, 138, .12);
       border-color: rgba(96, 165, 250, .45);
-      box-shadow: 0 0 14px rgba(37, 99, 235, .35);
     }
 
     
@@ -710,7 +676,6 @@
     button.clear-btn:hover {
       background: rgba(239, 68, 68, .1) !important;
       border-color: rgba(248, 113, 113, .6) !important;
-      box-shadow: 0 0 16px rgba(239, 68, 68, .45) !important;
       transform: translateY(-1px);
     }
 
@@ -724,7 +689,6 @@
       border-radius: var(--radius-sm);
       font-weight: 700;
       font-size: 14px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, .4);
       opacity: 0;
       transform: translateY(12px);
       transition: opacity .25s ease, transform .25s ease;
@@ -772,7 +736,7 @@
       text-align: center;
       cursor: pointer;
       background: rgba(96, 165, 250, .03);
-      transition: all 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
       margin-bottom: 16px;
       position: relative;
       overflow: hidden;
@@ -842,7 +806,6 @@
       flex-direction: column;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
     .webcam-viewport-container {
@@ -889,7 +852,7 @@
       aspect-ratio: 1.586; /* Standard ID-1 MyKad / Sticker aspect ratio */
       border: 2px dashed rgba(255, 255, 255, 0.55);
       border-radius: 12px;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45); /* taste-skill-ignore: scrim around the scan guide */
       box-sizing: border-box;
       display: flex;
       align-items: flex-end;
@@ -934,7 +897,6 @@
       background: rgba(0, 0, 0, 0.72);
       padding: 4px 10px;
       border-radius: 4px;
-      backdrop-filter: blur(4px);
     }
 
     .webcam-status-msg {
@@ -971,7 +933,6 @@
       color: #ffffff !important;
       border: 1px solid #3b82f6 !important;
       border-radius: 9999px !important;
-      box-shadow: 0 0 16px rgba(37, 99, 235, 0.45) !important;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -979,7 +940,6 @@
     }
     .webcam-capture-btn:hover {
       background: #1d4ed8 !important;
-      box-shadow: 0 0 20px rgba(37, 99, 235, 0.65) !important;
       transform: translateY(-1px);
     }
     .webcam-capture-btn:active {
@@ -1027,7 +987,6 @@
         padding: 10px 14px;
         background: var(--panel);
         border-top: 1px solid var(--border);
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
         z-index: 100;
         justify-content: flex-start;
         flex-wrap: nowrap;
@@ -1042,9 +1001,7 @@
         left: 10px;
         right: 10px;
         z-index: 101;
-        backdrop-filter: blur(12px);
         background: var(--panel) !important;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
       }
 
       .output-container .button-row button {
@@ -1074,7 +1031,6 @@
     .btn-pat301:hover {
       background: rgba(16, 185, 129, .1) !important;
       border-color: rgba(52, 211, 153, .6) !important;
-      box-shadow: 0 0 16px rgba(16, 185, 129, .45) !important;
       transform: translateY(-1px);
     }
 
@@ -1085,8 +1041,6 @@
       width: 100vw;
       height: 100vh;
       background: rgba(4, 8, 16, 0.88);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       z-index: 9999;
       display: none;
       align-items: center;
@@ -1108,7 +1062,6 @@
       height: 94vh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
       overflow: hidden;
       animation: patModalEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -1152,8 +1105,7 @@
       padding: 4px 8px;
       cursor: pointer;
       border-radius: var(--radius-sm);
-      box-shadow: none;
-      transition: all .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
     }
 
     .modal-close-btn:hover {
@@ -1258,7 +1210,6 @@
       border-radius: var(--radius-sm);
       padding: 7px 10px;
       font-size: 12.5px;
-      box-shadow: none;
       margin: 0;
       font-family: inherit;
     }
@@ -1268,7 +1219,6 @@
     .pat-field textarea:focus {
       border-color: var(--accent);
       outline: none;
-      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
     }
 
     .pat-field textarea {
@@ -1292,7 +1242,7 @@
       padding: 6px 10px;
       cursor: pointer;
       user-select: none;
-      transition: all 0.15s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
     }
 
     .test-check-item:hover {
@@ -1335,7 +1285,7 @@
       border-radius: 4px;
       cursor: pointer;
       user-select: none;
-      transition: all .12s ease;
+      transition: background-color .12s ease, border-color .12s ease, color .12s ease, transform .12s ease;
       margin: 0;
     }
 
@@ -1418,7 +1368,6 @@
       position: relative;
       background: #ffffff;
       border-radius: 4px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
       overflow: hidden;
       max-width: 100%;
       display: flex;
@@ -1545,21 +1494,18 @@
     .btn-rujukan:hover {
       background: rgba(16, 185, 129, .1) !important;
       border-color: rgba(52, 211, 153, .6) !important;
-      box-shadow: 0 0 16px rgba(16, 185, 129, .45) !important;
       transform: translateY(-1px);
     }
 
     .btn-ra301:hover {
       background: rgba(245, 158, 11, .1) !important;
       border-color: rgba(251, 191, 36, .6) !important;
-      box-shadow: 0 0 16px rgba(245, 158, 11, .45) !important;
       transform: translateY(-1px);
     }
 
     .btn-bt105:hover {
       background: rgba(239, 68, 68, .1) !important;
       border-color: rgba(248, 113, 113, .6) !important;
-      box-shadow: 0 0 16px rgba(239, 68, 68, .45) !important;
       transform: translateY(-1px);
     }
 
@@ -1810,7 +1756,6 @@
       .output-container {
         display: block !important;
         border: none !important;
-        box-shadow: none !important;
         background: transparent !important;
         padding: 0 !important;
         max-width: 100% !important;
@@ -1855,30 +1800,27 @@
       background: var(--bg) !important;
       color: #e5e7eb !important;
       border: 1px solid rgba(99, 102, 241, .35) !important;
-      box-shadow: 0 0 12px -2px rgba(49, 46, 129, .5), 0 0 3px rgba(99, 102, 241, .25) !important;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
     .btn-dictate:hover {
       background: rgba(99, 102, 241, .12) !important;
       border-color: rgba(129, 140, 248, .6) !important;
-      box-shadow: 0 0 16px rgba(99, 102, 241, .45) !important;
       transform: translateY(-1px);
     }
     .btn-dictate.recording {
       background: rgba(239, 68, 68, .15) !important;
       border-color: #ef4444 !important;
-      box-shadow: 0 0 18px rgba(239, 68, 68, .6) !important;
       color: #fee2e2 !important;
       animation: pulse-recording 1.5s infinite;
     }
     @keyframes pulse-recording {
-      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } /* taste-skill-ignore: live recording pulse */
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } /* taste-skill-ignore: live recording pulse */
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } /* taste-skill-ignore: live recording pulse */
     }
 
   
@@ -1892,7 +1834,6 @@
       flex: 1 1 100% !important;
       max-width: 100% !important;
       border-color: rgba(96, 165, 250, .5) !important;
-      box-shadow: 0 0 24px -2px rgba(37, 99, 235, .45), 0 8px 24px rgba(0, 0, 0, .5) !important;
       background: #0d1527 !important;
     }
 
@@ -1914,7 +1855,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(90deg, rgba(30, 58, 138, 0.4), rgba(15, 23, 42, 0.6));
+      background: transparent;
       border: 1px solid rgba(96, 165, 250, 0.3);
       padding: 10px 16px;
       border-radius: var(--radius-md);
@@ -1954,13 +1895,12 @@
       flex: 0 0 auto;
       width: auto;
       gap: 6px;
-      transition: all .15s ease;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
     }
 
     .trauma-tab-btn.active {
       background: var(--accent-hover);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.5);
     }
 
     .trauma-columns {
@@ -2053,7 +1993,7 @@
     
 
     .chip-btn.intervention.active {
-      background: linear-gradient(180deg, #f59e0b, #d97706);
+      background: #d97706;
       color: #fff;
       border-color: #fbbf24;
     }
@@ -2089,7 +2029,6 @@
       background: #0f172a;
       border: 2px solid #60a5fa;
       cursor: grab;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
 
     .clinical-entry-row {
@@ -2234,7 +2173,6 @@
 
     .injury-tool-btn.active {
       border-color: #fff;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
     }
 
     
@@ -2250,7 +2188,7 @@
       position: relative;
       width: 100%;
       max-width: 480px;
-      background: radial-gradient(circle at center, rgba(30, 58, 138, 0.15), rgba(11, 15, 22, 0.8));
+      background: transparent;
       border: 1px solid rgba(59, 130, 246, 0.2);
       border-radius: 12px;
       padding: 8px;
@@ -2279,7 +2217,6 @@
       font-weight: 800;
       color: #fff;
       border: 1.5px solid #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 12px currentColor;
       transform: translate(-50%, -50%);
       cursor: pointer;
       animation: pulse-pin 2s infinite;
@@ -2342,7 +2279,7 @@
       paint-order: stroke; stroke: #fff; stroke-width: 5px;
     }
     .exam-region-label.small { font-size: 16px; }
-    .exam-pin { animation: none; color: #fff; border: 2px solid #fff; font-size: 9px; box-shadow: 0 1px 4px rgba(0, 0, 0, .45); }
+    .exam-pin { animation: none; color: #fff; border: 2px solid #fff; font-size: 9px; }
     .exam-map-hint { font-size: 11px; color: var(--muted); text-align: center; }
     .exam-map-side { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
     .exam-finding-panel {
@@ -2696,8 +2633,8 @@
     html[data-theme] body input[readonly] { color: var(--text-2) !important; background-color: var(--panel-2) !important; }
     html[data-theme] body select {
       background-image:
-        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-        linear-gradient(135deg, var(--muted) 50%, transparent 50%) !important;
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%), /* taste-skill-ignore: the select arrow */
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%) !important; /* taste-skill-ignore: the select arrow */
       background-position: calc(100% - 17px) 50%, calc(100% - 12px) 50% !important;
       background-size: 5px 5px, 5px 5px !important;
       background-repeat: no-repeat !important;
@@ -2849,8 +2786,6 @@
     /* ---------- Modals ---------- */
     html[data-theme] body .modal-backdrop {
       background: rgba(10, 10, 12, .55) !important;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
     }
     html[data-theme] body .modal-dialog,
     html[data-theme] body .webcam-modal-dialog {
@@ -3500,6 +3435,58 @@
     html[data-theme] body .output-container .forms-menu-list { top: auto; bottom: calc(100% + 6px); }
     html[data-theme] body .toast { bottom: calc(var(--sheet-peek) + 16px); }
 
+    /* ---------- Header: everyday actions in front, the rest under More ---------- */
+    html[data-theme] body header .forms-menu-list button { min-height: 36px; }
+    html[data-theme] body header .header-more-stamp { display: none; }
+    html[data-theme] body header .header-more .header-wipe {
+      color: var(--danger) !important;
+      margin-top: 4px;
+      border-top: 1px solid var(--border) !important;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    }
+    /* Day/Night is a small icon toggle; its words stay for screen readers. */
+    html[data-theme] body header .btn-theme-toggle {
+      width: 36px; height: 36px; min-height: 36px; padding: 0; justify-content: center; flex: none;
+    }
+    html[data-theme] body header .btn-theme-toggle > span {
+      position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+    }
+    html[data-theme] body header .btn-theme-toggle .btn-icon { display: block; width: 18px; height: 18px; }
+
+    /* ---------- Trauma: the same sentence-case labels as every other tab ---------- */
+    html[data-theme] body .trauma-banner-title { font-size: 15px; font-weight: 600; color: var(--text); }
+    html[data-theme] body .trauma-workspace :is(.card-title, .clinical-entry-label, .eye-title) {
+      text-transform: none !important;
+      letter-spacing: 0 !important;
+    }
+    html[data-theme] body .trauma-workspace .card-title,
+    html[data-theme] body .trauma-workspace .survey-title { font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+    html[data-theme] body .trauma-workspace .clinical-entry-label { font-size: 14px; font-weight: 600; color: var(--text); }
+    .survey-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 6px;
+      background: var(--panel-3); color: var(--text-2);
+      font-size: 12px; font-weight: 700;
+    }
+    html[data-theme] body .trauma-sublabel { font-size: 13px; font-weight: 600; color: var(--text-2); }
+    html[data-theme] body .trauma-workspace .normal-toggle { color: var(--text-2); font-size: 13px; font-weight: 500; }
+    html[data-theme] body .trauma-workspace .custom-check {
+      border-color: var(--border-strong); background: transparent; color: var(--accent-ink);
+    }
+    html[data-theme] body .trauma-workspace .custom-check:not(:empty) { background: var(--accent); border-color: var(--accent); }
+    html[data-theme] body #traumaGcsReadout,
+    html[data-theme] body #traumaGcsTotal { color: var(--accent) !important; }
+
+    /* ---------- Board cards: say the status in words ---------- */
+    .cb-status { width: auto; gap: 6px; align-items: center; }
+    .cb-status svg { flex: none; }
+    .cb-status-text { font-size: 13px; line-height: 16px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+    .cb-status.is-draft .cb-status-text { color: var(--accent); }
+    .cb-status.is-done .cb-status-text { color: var(--text-2); }
+    /* An empty card already reads "Nothing entered" below its title. */
+    .cb-status:not(.is-draft):not(.is-done) .cb-status-text { display: none; }
+    .cb-brand { flex: 1 1 auto; }
+
     /* ---------- Insert: the main action of every tab ----------
        A row that holds a Clear is an Insert row; its first button is the Insert.
        Insert takes the accent fill (Copy Notes keeps the ink fill), Clear moves
@@ -3596,8 +3583,6 @@
 
     /* ---------- Tablet and phone ---------- */
     @media (max-width: 1180px) {
-      html[data-theme] body > header { flex-wrap: wrap; }
-      html[data-theme] body header .button-row { flex-wrap: wrap; flex: 1 1 100%; }
       html[data-theme] body #main-sections { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 768px) {
@@ -3620,6 +3605,22 @@
         flex-wrap: wrap;
       }
       #dictationStatusWrap { position: static; bottom: auto; flex: none; }
+      /* Header: one row. Timestamp moves into More. */
+      html[data-theme] body > header { flex-wrap: nowrap; gap: 8px; padding-left: var(--board-gutter); padding-right: var(--board-gutter); }
+      html[data-theme] body header .button-row { flex: none; flex-wrap: nowrap; }
+      html[data-theme] body header .header-stamp { display: none; }
+      html[data-theme] body header .header-more-stamp { display: flex; }
+      html[data-theme] body .main-collapsible .cb-status .cb-status-text { display: inline; }
+      .cb-brand { gap: 10px; flex: 1 1 auto; }
+      /* Board: one compact row per section; the summary line only when there is something in it. */
+      html[data-theme] body #main-sections { gap: 8px; }
+      html[data-theme] body .main-collapsible,
+      html[data-theme] body .main-collapsible:hover { padding: 11px 14px; row-gap: 2px; }
+      html[data-theme] body .main-collapsible > span:first-child { order: 0; }
+      html[data-theme] body .main-collapsible .cb-summary:not(.has-data) { display: none; }
+      html[data-theme] body .main-collapsible .cb-summary { order: 4; margin-top: 2px; -webkit-line-clamp: 1; font-size: 13px; }
+      html[data-theme] body .main-collapsible .cb-status { order: 1; }
+      html[data-theme] body .main-collapsible .arrow { order: 2; }
       html[data-theme] body .toast { bottom: calc(var(--sheet-peek) + 12px); }
       .cb-note-title { font-size: 15px; }
     }
@@ -3701,9 +3702,7 @@
       <span id="cbPatient"></span>
     </div>
     <div class="button-row" style="margin-top:0">
-      <button type="button" id="themeToggleBtn" class="btn-theme-toggle" data-on-click="toggleTheme" data-args='[]' title="Toggle Day / Night Mode (Ctrl+Shift+L)"><span>Day Mode</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
-      <button type="button" id="installAppBtn" class="btn-secondary" style="display:none;" data-on-click="triggerPWAInstall" data-args='[]' title="Install ED Doc on this device"><span>Install App</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-      <button type="button" class="btn-secondary" data-on-click="addTimestamp" data-args='[]'><span>Add Timestamp</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+      <button type="button" class="btn-secondary header-stamp" data-on-click="addTimestamp" data-args='[]'><span>Add Timestamp</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
       <div class="forms-menu" id="formsMenu">
         <button type="button" class="btn-secondary forms-menu-btn" id="formsMenuBtn" aria-haspopup="true" aria-expanded="false" data-on-click="toggleFormsMenu" data-args='[{"event": true}]'><span>Forms</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="forms-menu-list" role="menu">
@@ -3714,8 +3713,16 @@
           <button type="button" role="menuitem" class="btn-bt105" style="background:#0d9488; color:#f0fdfa;" data-on-click="openFisioterapiModal" data-args='[]'><span>Physiotherapy Referral</span></button>
         </div>
       </div>
-      <button type="button" class="btn-secondary" data-on-click="wipePatientData" data-args='[]' title="Wipe all patient data and saved draft from this device"><span>Wipe Patient Data</span></button>
-      <button type="button" class="btn-secondary" data-on-click="navigateTo" data-args='["schema_editor.html"]' title="Open Parameter & Chip Button Configurator"><span>Template Editor</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <div class="forms-menu header-more">
+        <button type="button" class="btn-secondary forms-menu-btn" aria-haspopup="true" aria-expanded="false" data-on-click="toggleFormsMenu" data-args='[{"event": true}]'><span>More</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="forms-menu-list" role="menu">
+          <button type="button" role="menuitem" id="installAppBtn" class="btn-secondary" style="display:none;" data-on-click="triggerPWAInstall" data-args='[]' title="Install ED Doc on this device"><span>Install App</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          <button type="button" role="menuitem" class="btn-secondary header-more-stamp" data-on-click="addTimestamp" data-args='[]'><span>Add Timestamp</span></button>
+          <button type="button" role="menuitem" class="btn-secondary" data-on-click="navigateTo" data-args='["schema_editor.html"]' title="Open Parameter & Chip Button Configurator"><span>Template Editor</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <button type="button" role="menuitem" class="btn-secondary header-wipe" data-on-click="wipePatientData" data-args='[]' title="Wipe all patient data and saved draft from this device"><span>Wipe Patient Data</span></button>
+        </div>
+      </div>
+      <button type="button" id="themeToggleBtn" class="btn-theme-toggle" data-on-click="toggleTheme" data-args='[]' title="Toggle Day / Night Mode (Ctrl+Shift+L)"><span>Day Mode</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
     </div>
   </header>
 
@@ -3917,14 +3924,13 @@
           <!-- Workspace Header Banner -->
           <div class="trauma-banner">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:12px; font-weight:700; color:#93c5fd; letter-spacing:0.04em;">EXAMINATION &amp; ATLS TRAUMA RESUSCITATION PROTOCOL</span>
+              <span class="trauma-banner-title">ATLS trauma survey</span>
             </div>
             <div class="trauma-nav-tabs">
-              <button type="button" class="trauma-tab-btn active" data-on-click="switchTraumaView" data-args='["all", {"this": true}]'>Dual-Pane View</button>
-              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["primary", {"this": true}]'>Primary Survey</button>
-              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["secondary", {"this": true}]'>Secondary Survey</button>
-              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["body", {"this": true}]'>Body Map Only</button>
-              <button type="button" class="trauma-tab-btn" style="color:#34d399;" data-on-click="exportTraumaClerkingPdf" data-args='[]'>Clerking PDF</button>
+              <button type="button" class="trauma-tab-btn active" data-on-click="switchTraumaView" data-args='["all", {"this": true}]'>Both surveys</button>
+              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["primary", {"this": true}]'>Primary survey</button>
+              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["secondary", {"this": true}]'>Secondary survey</button>
+              <button type="button" class="trauma-tab-btn" data-on-click="switchTraumaView" data-args='["body", {"this": true}]'>Body map</button>
             </div>
           </div>
 
@@ -3937,8 +3943,8 @@
               <!-- AIRWAY & CERVICAL SPINE (Maintains Normal Toggle Switch) -->
               <div class="survey-box" id="panelTraumaAirway">
                 <div class="survey-box-head">
-                  <span class="survey-title">🅰️ AIRWAY</span>
-                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["airway"]'><span class="custom-check" id="airwayCheck"></span> NORMAL</span>
+                  <span class="survey-title"><span class="survey-letter">A</span>Airway</span>
+                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["airway"]'><span class="custom-check" id="airwayCheck"></span> Normal</span>
                 </div>
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
@@ -3952,7 +3958,7 @@
                   </div>
 
                   <div class="clinical-entry-row">
-                    <span class="clinical-entry-label">Cervical Spine &amp; Trachea</span>
+                    <span class="clinical-entry-label">Cervical spine and trachea</span>
                     <div class="chip-row" id="airwayCSpineRow" style="margin-bottom:2px;">
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaAirwayCSpine", {"this": true}]'>No injury</button>
                       <button type="button" class="chip-btn" data-on-click="appendFieldChip" data-args='["traumaAirwayCSpine", {"this": true}]'>Injury suspected</button>
@@ -3980,8 +3986,8 @@
               <!-- BREATHING (No Toggle Switch, Clean Entry Titles as Requested) -->
               <div class="survey-box" id="panelTraumaBreathing">
                 <div class="survey-box-head">
-                  <span class="survey-title">🅱️ BREATHING</span>
-                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["breathing"]'><span class="custom-check" id="breathingCheck"></span> NORMAL</span>
+                  <span class="survey-title"><span class="survey-letter">B</span>Breathing</span>
+                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["breathing"]'><span class="custom-check" id="breathingCheck"></span> Normal</span>
                 </div>
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
@@ -4041,8 +4047,8 @@
               <!-- CIRCULATION (No Toggle Switch, Clean Entry Titles as Requested) -->
               <div class="survey-box" id="panelTraumaCirculation">
                 <div class="survey-box-head">
-                  <span class="survey-title">🅲️ CIRCULATION</span>
-                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["circulation"]'><span class="custom-check" id="circulationCheck"></span> NORMAL</span>
+                  <span class="survey-title"><span class="survey-letter">C</span>Circulation</span>
+                  <span class="normal-toggle" data-on-click="toggleSurveyNormal" data-args='["circulation"]'><span class="custom-check" id="circulationCheck"></span> Normal</span>
                 </div>
                 
                 <div style="display:flex; flex-direction:column; gap:8px;">
@@ -4085,14 +4091,14 @@
               <!-- DISABILITY / GCS & SEPARATE EYE PUPILS ASSESSMENT -->
               <div class="card-panel" id="panelTraumaDisability">
                 <div class="card-panel-header">
-                  <span class="card-title">Disability, GCS &amp; Pupil Assessment</span>
+                  <span class="card-title">Disability, GCS and pupils</span>
                   <span style="font-size:11px; color:var(--muted);">Separate assessment for each eye</span>
                 </div>
                 
                 <!-- GCS Calculator Row -->
                 <div class="gcs-panel">
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">EYE (1-4)</div>
+                    <div class="trauma-sublabel">Eye (1–4)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-e" data-val="1" data-on-click="setTraumaGcsE" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-e" data-val="2" data-on-click="setTraumaGcsE" data-args='[2, {"this": true}]'>2</button>
@@ -4101,7 +4107,7 @@
                     </div>
                   </div>
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">VERBAL (1-5)</div>
+                    <div class="trauma-sublabel">Verbal (1–5)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-v" data-val="1" data-on-click="setTraumaGcsV" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-v" data-val="2" data-on-click="setTraumaGcsV" data-args='[2, {"this": true}]'>2</button>
@@ -4111,7 +4117,7 @@
                     </div>
                   </div>
                   <div>
-                    <div style="font-size:11px; font-weight:700; color:var(--muted);">MOTOR (1-6)</div>
+                    <div class="trauma-sublabel">Motor (1–6)</div>
                     <div class="chip-row" style="margin-top:4px;">
                       <button type="button" class="chip-btn gcs-btn-m" data-val="1" data-on-click="setTraumaGcsM" data-args='[1, {"this": true}]'>1</button>
                       <button type="button" class="chip-btn gcs-btn-m" data-val="2" data-on-click="setTraumaGcsM" data-args='[2, {"this": true}]'>2</button>
@@ -4122,7 +4128,7 @@
                     </div>
                   </div>
                   <div class="gcs-score-badge">
-                    <span style="font-size:10px; color:var(--muted); font-weight:bold;">GCS SCORE</span>
+                    <span class="trauma-sublabel">GCS</span>
                     <span style="font-size:18px; font-weight:800; color:#60a5fa;" id="traumaGcsReadout">E_V_M_</span>
                     <span style="font-size:11px; font-weight:700; color:#34d399;" id="traumaGcsTotal">-- / 15</span>
                     <input type="hidden" id="traumaGCS" value="" />
@@ -4135,7 +4141,7 @@
                   <!-- Right Eye (OD) -->
                   <div class="eye-assessment-card">
                     <div class="eye-title">
-                      <span>RIGHT EYE (OD)</span>
+                      <span>Right eye (OD)</span>
                       <span style="color:#60a5fa; font-weight:bold;" id="traumaOdReadout">-- mm &bull; Unassessed</span>
                     </div>
 
@@ -4154,7 +4160,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY</div>
+                      <div class="trauma-sublabel" style="margin-bottom:3px;">Reactivity</div>
                       <div class="chip-row" id="traumaOdReactivity">
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["od", "Reactive", {"this": true}]'>Reactive</button>
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["od", "Sluggish", {"this": true}]'>Sluggish</button>
@@ -4168,7 +4174,7 @@
                   <!-- Left Eye (OS) -->
                   <div class="eye-assessment-card">
                     <div class="eye-title">
-                      <span>LEFT EYE (OS)</span>
+                      <span>Left eye (OS)</span>
                       <span style="color:#60a5fa; font-weight:bold;" id="traumaOsReadout">-- mm &bull; Unassessed</span>
                     </div>
 
@@ -4187,7 +4193,7 @@
                     </div>
 
                     <div>
-                      <div style="font-size:10.5px; color:var(--muted); font-weight:600; margin-bottom:3px;">REACTIVITY</div>
+                      <div class="trauma-sublabel" style="margin-bottom:3px;">Reactivity</div>
                       <div class="chip-row" id="traumaOsReactivity">
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["os", "Reactive", {"this": true}]'>Reactive</button>
                         <button type="button" class="chip-btn" data-on-click="setTraumaEyeReact" data-args='["os", "Sluggish", {"this": true}]'>Sluggish</button>
@@ -4204,7 +4210,7 @@
               <!-- SECONDARY SURVEY: AMPLE HISTORY (Safety Restraints Removed) & REGIONAL FINDINGS -->
               <div class="card-panel" id="panelTraumaSecondary">
                 <div class="card-panel-header">
-                  <span class="card-title">Secondary Survey (Mechanism, Last Meal &amp; Regional Details)</span>
+                  <span class="card-title">Secondary survey</span>
                   <span style="font-size:11px; color:var(--muted);">ATLS Page 2</span>
                 </div>
 
@@ -4217,7 +4223,7 @@
 
                 <!-- Regional Examination Details from PDF Page 2 -->
                 <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:10px; margin-top:4px;">
-                  <div style="font-size:11.5px; font-weight:700; color:#93c5fd; margin-bottom:8px;">REGIONAL INJURY DETAILS</div>
+                  <div class="trauma-sublabel" style="margin-bottom:8px;">Regional injury details</div>
                   <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                     <div class="region-row"><label>Head</label><input aria-label="Reg Head" type="text" id="traumaRegHead" value="" /></div>
                     <div class="region-row"><label>Neck</label><input aria-label="Reg Neck" type="text" id="traumaRegNeck" value="" /></div>
@@ -4239,13 +4245,13 @@
 
               <div class="diagram-card">
                 <div class="card-panel-header" style="width:100%;">
-                  <span class="card-title">Interactive Human Body Diagram</span>
+                  <span class="card-title">Body diagram</span>
                   <span style="font-size:11px; color:var(--accent-2); font-weight:bold;" id="traumaPinCountLabel">● 0 Injuries Plotted</span>
                 </div>
 
                 <!-- Interactive Injury Tool Palette (with Puncture, Swelling & Deformity) -->
                 <div class="diagram-toolbar">
-                  <span style="font-size:11px; font-weight:bold; color:var(--muted);">PLOT TOOL</span>
+                  <span class="trauma-sublabel">Mark an injury</span>
                   <div style="display:flex; gap:4px; flex-wrap:wrap;">
                     <button type="button" class="injury-tool-btn tool-lac" data-on-click="selectTraumaTool" data-args='["L", "#ef4444", {"this": true}]'>Laceration (L)</button>
                     <button type="button" class="injury-tool-btn tool-abr" data-on-click="selectTraumaTool" data-args='["A", "#f97316", {"this": true}]'>Abrasion (A)</button>
@@ -4523,7 +4529,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
                 <!-- Pinned Injuries Ledger -->
                 <div class="injury-ledger">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                    <span style="font-size:11px; font-weight:700; color:var(--muted);">MAPPED TRAUMA INJURIES</span>
+                    <span class="trauma-sublabel">Mapped injuries</span>
                     <span style="font-size:10px; color:var(--accent);">Auto-links to Clerking Sheet</span>
                   </div>
 

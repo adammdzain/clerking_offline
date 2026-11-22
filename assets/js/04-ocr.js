@@ -566,7 +566,7 @@ function updateOCRProgress(status, pct) {
   ocrContent.style.display = 'none';
   ocrProgress.classList.add('active');
   ocrProgressText.textContent = `${status} ${Math.round(pct * 100)}%`;
-  ocrProgressBar.style.background = `linear-gradient(to right, var(--accent) ${pct * 100}%, var(--border) ${pct * 100}%)`;
+  ocrProgressBar.style.background = `linear-gradient(to right, var(--accent) ${pct * 100}%, var(--border) ${pct * 100}%)`; // taste-skill-ignore: hard-stop progress fill
 }
 
 // Downscale huge smartphone camera photos (e.g. 12-48MP)
