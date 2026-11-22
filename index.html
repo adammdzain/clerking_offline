@@ -3500,6 +3500,58 @@
     html[data-theme] body .output-container .forms-menu-list { top: auto; bottom: calc(100% + 6px); }
     html[data-theme] body .toast { bottom: calc(var(--sheet-peek) + 16px); }
 
+    /* ---------- Insert: the main action of every tab ----------
+       A row that holds a Clear is an Insert row; its first button is the Insert.
+       Insert takes the accent fill (Copy Notes keeps the ink fill), Clear moves
+       to the row's far end as quiet text so the two are hard to confuse. */
+    html[data-theme] body #main-sections .button-row:has(> .clear-btn, > .btn-clear) {
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    /* In a long open tab the row stays pinned to the bottom of the screen, above the note's bar. */
+    html[data-theme] body #main-sections .main-section.is-expanded .button-row:has(> .clear-btn, > .btn-clear) {
+      position: sticky;
+      bottom: var(--sheet-peek);
+      z-index: 3;
+      padding: 12px 0;
+      margin-bottom: -4px;
+      background: var(--panel);
+      box-shadow: 0 -1px 0 var(--border);
+    }
+    html[data-theme] body #main-sections .button-row:has(> .clear-btn, > .btn-clear) > button:first-child {
+      min-height: 40px;
+      min-width: 120px;
+      justify-content: center;
+      padding: 9px 22px;
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: var(--bg) !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+    }
+    html[data-theme] body #main-sections .button-row:has(> .clear-btn, > .btn-clear) > button:first-child:hover {
+      background: var(--accent-hover) !important;
+      border-color: var(--accent-hover) !important;
+      color: var(--bg) !important;
+    }
+    html[data-theme] body #main-sections .button-row:has(> .clear-btn, > .btn-clear) > button:not(:first-child):not(.clear-btn):not(.btn-clear) { min-height: 40px; }
+    /* Trauma's actions sit in the narrow diagram column: Insert takes the full row. */
+    html[data-theme] body #main-sections .trauma-workspace .button-row:has(> .btn-clear) > button:first-child { flex: 1 1 100% !important; white-space: nowrap; }
+    /* HOPI's Insert All sits under the open complaint's own Insert: outlined, and not pinned,
+       so the complaint's Insert is never covered. */
+    html[data-theme] body #main-sections .main-section.is-expanded #hopi-all-actions { position: static; padding: 0; margin-bottom: 0; box-shadow: none; }
+    html[data-theme] body #main-sections #hopi-all-actions > button:first-child,
+    html[data-theme] body #main-sections #hopi-all-actions > button:first-child:hover {
+      background: transparent !important;
+      color: var(--accent) !important;
+    }
+    html[data-theme] body #main-sections .button-row > :is(.clear-btn, .btn-clear) {
+      margin-left: auto;
+      min-height: 40px;
+      border-color: transparent !important;
+    }
+
     /* ---------- Wide screens: the note docks beside the board ----------
        Same width threshold as the 4-column board; below it the bottom sheet stays.
        --header-h is kept in step with the sticky header by 16-case-board.js. */
@@ -3529,6 +3581,7 @@
         transition: none;
       }
       html[data-theme="dark"] body .output-container { box-shadow: none !important; }
+      html[data-theme] body #main-sections .main-section.is-expanded .button-row:has(> .clear-btn, > .btn-clear) { bottom: 0; }
       /* Keep the body diagram's share of the narrower Trauma card. */
       html[data-theme] body .trauma-columns { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
       html[data-theme] body .pupil-split-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
