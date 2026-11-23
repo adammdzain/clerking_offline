@@ -3091,7 +3091,6 @@
     html[data-theme] body #main-sections {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      grid-auto-flow: dense;
       gap: 12px;
       align-items: start;
       max-width: 1480px;
@@ -3935,7 +3934,18 @@
         </div><!-- /examExperimentWrap -->
       </div>
     </div>
-    <!-- 6. Trauma Section (Proper ED ATLS Workflow & Unique IDs) -->
+    <!-- 6. Impression and Plan: follows the examination -->
+    <div class="main-section" id="impression-plan">
+      <button type="button" class="main-collapsible" aria-expanded="false">
+        <span>Impression and Plan</span>
+        <span class="arrow"><svg class="arrow-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </button>
+      <div class="main-content">
+        <div id="impression-container"></div>
+      </div>
+    </div>
+
+    <!-- 7. Trauma Section (Proper ED ATLS Workflow & Unique IDs) -->
     <div class="main-section" id="Trauma">
       <button type="button" class="main-collapsible" aria-expanded="false">
         <span>Trauma</span>
@@ -4585,7 +4595,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
       </div>
     </div>
 
-    <!-- 7. Routine Cases -->
+    <!-- 8. Routine Cases -->
     <div class="main-section" id="routine-cases">
       <button type="button" class="main-collapsible" aria-expanded="false">
         <span>Routine Cases</span>
@@ -4593,17 +4603,6 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
       </button>
       <div class="main-content">
         <div id="routine-container"></div>
-      </div>
-    </div>
-
-    <!-- 8. Impression and Plan: the last section of every note format -->
-    <div class="main-section" id="impression-plan">
-      <button type="button" class="main-collapsible" aria-expanded="false">
-        <span>Impression and Plan</span>
-        <span class="arrow"><svg class="arrow-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
-      </button>
-      <div class="main-content">
-        <div id="impression-container"></div>
       </div>
     </div>
   </div><!-- /main-sections -->

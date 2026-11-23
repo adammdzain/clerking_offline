@@ -15,6 +15,10 @@ function cbAnimate(el, frames, options) {
 
 // Board motion is tagged so a new click can stop it without touching the page's own CSS transitions.
 const CB_MOTION_ID = 'cb-board';
+// One knob for the board: every tile move, resize, open and close runs for this long (ms).
+const CB_BOARD_MS = 480;
+// Eases in gently and settles softly, so tiles glide rather than snap.
+const CB_BOARD_EASE = 'cubic-bezier(.45, 0, .2, 1)';
 
 function cbStopBoardMotion(board) {
   board.getAnimations({ subtree: true }).forEach(a => { if (a.id === CB_MOTION_ID) a.cancel(); });
@@ -37,11 +41,11 @@ function cbCloseGhost(from, to) {
   const inset = [to.top - from.top, from.right - to.right, from.bottom - to.bottom, to.left - from.left].map(v => `${Math.max(0, v)}px`).join(' ');
   const a = ghost.animate(
     [{ clipPath: 'inset(0 round 8px)', opacity: 1 }, { clipPath: `inset(${inset} round 8px)`, opacity: 0 }],
-    { duration: 240, easing: 'cubic-bezier(.2, .8, .2, 1)' }
+    { duration: CB_BOARD_MS, easing: CB_BOARD_EASE }
   );
   a.onfinish = a.oncancel = () => ghost.remove();
   // A tab that stops painting mid-animation must not leave the shell on the page.
-  setTimeout(() => ghost.remove(), 600);
+  setTimeout(() => ghost.remove(), CB_BOARD_MS + 300);
 }
 
 // Wrap each flat label + chips + input run in its own box so fields can sit in columns.
@@ -133,16 +137,22 @@ function cbRefresh() {
   document.getElementById('noteStatus').textContent = cbNoteStatus(note);
 }
 
-// Close the board's last row: the final closed card takes whatever cells are left over.
+// Cards keep their order: an open card takes its own full row, so it never lets later tiles jump above it.
+// The last closed tile before each open card (and at the end) stretches over the cells left in its row.
 function cbFitBoard() {
   const board = document.getElementById('main-sections');
   const cards = Array.from(board.querySelectorAll('.main-section'));
-  const closed = cards.filter(c => !c.classList.contains('is-expanded'));
   // Clear first: a leftover span adds an implicit column that would be counted below.
   cards.forEach(c => { c.style.gridColumn = ''; });
   const columns = getComputedStyle(board).gridTemplateColumns.split(' ').length;
-  if (columns < 2 || !closed.length) return;
-  closed[closed.length - 1].style.gridColumn = `span ${columns - (closed.length - 1) % columns}`;
+  if (columns < 2) return;
+  let run = [];
+  const close = () => {
+    if (run.length) run[run.length - 1].style.gridColumn = `span ${columns - (run.length - 1) % columns}`;
+    run = [];
+  };
+  cards.forEach(c => (c.classList.contains('is-expanded') ? close() : run.push(c)));
+  close();
 }
 
 function cbInitBoardMotion() {
@@ -175,16 +185,23 @@ function cbInitBoardMotion() {
       const isOpen = card.classList.contains('is-expanded');
       if (card === opened && isOpen) {
         const clip = `inset(0 ${Math.max(0, b.width - a.width)}px ${Math.max(0, b.height - a.height)}px 0 round 8px)`;
-        cbMove(card, [{ transform: `translate(${dx}px, ${dy}px)`, clipPath: clip }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 8px)' }], { duration: 300 });
-        cbMove(card.querySelector('.main-content'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 220, delay: 80, fill: 'backwards' });
-      } else if (dx || dy) {
-        cbMove(card, [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 300 });
+        cbMove(card, [{ transform: `translate(${dx}px, ${dy}px)`, clipPath: clip }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 8px)' }], { duration: CB_BOARD_MS, easing: CB_BOARD_EASE });
+        cbMove(card.querySelector('.main-content'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: CB_BOARD_MS * 0.7, delay: CB_BOARD_MS * 0.3, easing: 'ease-out', fill: 'backwards' });
+      } else {
+        // A tile that changes width (stretching to fill its row, or giving that room back) grows or shrinks as it moves.
+        const resized = Math.abs(a.width - b.width) > 1;
+        if (dx || dy || resized) {
+          const from = { transform: `translate(${dx}px, ${dy}px)` };
+          const to = { transform: 'none' };
+          if (resized) { from.width = `${a.width}px`; to.width = `${b.width}px`; }
+          cbMove(card, [from, to], { duration: CB_BOARD_MS, easing: CB_BOARD_EASE });
+        }
       }
       if (open.has(card) && !isOpen) {
         cbCloseGhost(a, b);
         // The tile's summary and status come back once it has settled, rather than popping in mid-glide.
         card.querySelectorAll('.cb-summary, .cb-status').forEach(el => {
-          cbMove(el, [{ opacity: 0 }, { opacity: 1 }], { duration: 180, delay: 140, easing: 'ease-out', fill: 'backwards' });
+          cbMove(el, [{ opacity: 0 }, { opacity: 1 }], { duration: CB_BOARD_MS * 0.4, delay: CB_BOARD_MS * 0.6, easing: 'ease-out', fill: 'backwards' });
         });
       }
     });
