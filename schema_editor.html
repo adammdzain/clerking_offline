@@ -22,6 +22,7 @@
       --bg: #0f1114;
       --panel: #171a1e;
       --panel-2: #20242a;
+      --panel-3: #2a2f36;
       --field: #1b1f24;
       --text: #f4f6f8;
       --text-2: #c7cdd5;
@@ -40,6 +41,7 @@
       --bg: #f1f3f6;
       --panel: #ffffff;
       --panel-2: #f3f5f8;
+      --panel-3: #e6e9ee;
       --field: #ffffff;
       --text: #0d0f12;
       --text-2: #3a424c;
@@ -102,6 +104,33 @@
     header .button-row { flex: none; flex-wrap: nowrap; gap: 2px; margin: 0; }
     header button { border-color: transparent; white-space: nowrap; }
 
+    /* ---------- Header: everyday actions in front, the rest under More (as in ED Doc) ---------- */
+    .btn-icon { flex: none; transition: transform .2s var(--ease-out); }
+    .forms-menu { position: relative; }
+    .forms-menu-list {
+      display: none; position: absolute; right: 0; top: calc(100% + 6px); z-index: 50;
+      min-width: 190px; padding: 4px; flex-direction: column; gap: 2px;
+      background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-md);
+      box-shadow: var(--elev);
+    }
+    .forms-menu.open .forms-menu-list { display: flex; }
+    .forms-menu-list button {
+      justify-content: flex-start; width: 100%; min-height: 36px;
+      padding: 9px 12px; border: 0; color: var(--text-2); text-align: left;
+    }
+    .forms-menu.open .forms-menu-btn .btn-icon { transform: rotate(180deg); }
+    .header-more .header-reset {
+      margin-top: 4px;
+      color: var(--danger);
+      border-top: 1px solid var(--border);
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    }
+    /* Day/Night is a small icon toggle; its words stay for screen readers. */
+    header .btn-theme-toggle { width: 36px; height: 36px; padding: 0; justify-content: center; flex: none; }
+    header .btn-theme-toggle > span {
+      position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+    }
+
     /* ---------- Buttons ---------- */
     .button-row { display: flex; flex-wrap: wrap; gap: 6px; }
     button {
@@ -141,13 +170,14 @@
       outline: none;
       transition: border-color .15s ease, box-shadow .15s ease;
     }
-    input::placeholder, textarea::placeholder { color: var(--muted); opacity: .7; }
+    input::placeholder, textarea::placeholder { color: var(--muted); opacity: .55; }
     input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
     @media (pointer: coarse) {
       input, select, textarea { font-size: 16px !important; }
     }
     [hidden] { display: none !important; }
-    label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin: 12px 0 4px; }
+    /* Labels lead their boxes: larger, bold and brighter than the placeholder text (as in ED Doc). */
+    label { display: block; font-size: 14px; font-weight: 600; color: var(--text-2); margin: 12px 0 4px; }
 
     /* ---------- Toolbar ---------- */
     .te-toolbar {
@@ -162,13 +192,17 @@
     .te-segments { display: flex; flex: none; gap: 2px; }
     .te-segments button { border-color: transparent; }
     .te-segments button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+    /* The filter highlight slides to the new choice (see teInitFilterPill). */
+    .te-segments { position: relative; }
+    .te-segments > button { position: relative; z-index: 1; }
+    .te-pill { position: absolute; z-index: 0; pointer-events: none; border-radius: var(--radius-sm); background: var(--accent-soft); }
+    .te-pill-moving > button[aria-pressed="true"] { background: transparent; }
     .te-counts { margin-left: auto; color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     /* ---------- Board ---------- */
     #main-sections {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      grid-auto-flow: dense;
       gap: 12px;
       align-items: start;
       max-width: 1480px;
@@ -184,6 +218,17 @@
     }
     .main-section:hover { border-color: var(--border-strong); }
     .main-section.is-expanded { grid-column: 1 / -1; border-color: var(--border-strong); }
+    /* Tiles sit above the shell a closing card leaves behind (see teCloseGhost). */
+    #main-sections .main-section { position: relative; z-index: 1; }
+    #main-sections .main-section.is-expanded { z-index: 2; }
+    .te-ghost {
+      position: fixed;
+      z-index: 0;
+      pointer-events: none;
+      background: var(--panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+    }
 
     .main-collapsible {
       display: flex;
@@ -271,10 +316,22 @@
     .te-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px 24px;
-      align-items: start;
+      gap: 12px;
+      align-items: stretch;
     }
-    .te-field { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+    /* Each parameter (name + its buttons) sits in its own panel, one step lighter than the card, as in ED Doc. */
+    .te-field {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px;
+      background: var(--panel-2);
+      border: 1px solid var(--panel-3);
+      border-radius: var(--radius-md);
+    }
+    /* Buttons keep a visible outline on the lighter panel. */
+    .te-field button.chip-tag:not(:hover) { background: var(--field); border-color: var(--border-strong); }
     .te-field.is-wide { grid-column: 1 / -1; }
     .te-field-top { display: flex; align-items: center; gap: 4px; min-height: 28px; }
     input[type="text"].te-name {
@@ -284,7 +341,7 @@
       margin-left: -7px;
       border-color: transparent;
       background: transparent;
-      font-size: 12.5px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-2);
     }
@@ -537,8 +594,44 @@
       body > header { position: static; }
       #main-sections { grid-template-columns: minmax(0, 1fr); }
       .main-collapsible { min-height: 0; }
+      /* Board: one compact row per section, as in ED Doc. */
+      #main-sections { gap: 8px; }
+      .main-collapsible { padding: 11px 14px; row-gap: 2px; }
+      .main-collapsible .cb-summary { margin-top: 2px; -webkit-line-clamp: 1; font-size: 13px; }
       .output-container { left: 6px; right: 6px; padding: 0 10px 10px 14px; }
       .toast { right: 12px; }
+    }
+    /* ---------- Wide screens: the Changes sheet docks beside the board (as ED Doc's note) ----------
+       Same width threshold as the 4-column board; below it the bottom sheet stays.
+       --header-h is kept in step with the sticky header by schema-editor.js. */
+    @media screen and (min-width: 1181px) {
+      :root { --dock-w: clamp(360px, 30vw, 520px); }
+      body, body.note-open { padding-bottom: 24px; }
+      .te-toolbar,
+      #main-sections {
+        max-width: none;
+        margin: 0;
+        padding-right: calc(var(--dock-w) + 2 * var(--board-gutter));
+      }
+      #main-sections { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+      .output-container,
+      body.note-open .output-container {
+        left: auto;
+        right: var(--board-gutter);
+        top: calc(var(--header-h, 54px) + 16px);
+        bottom: 16px;
+        width: var(--dock-w);
+        height: auto;
+        padding: 0 16px 16px 20px;
+        border-bottom: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: none;
+        transform: none;
+        transition: none;
+      }
+      #noteToggle { cursor: default; }
+      .cb-note-chev { display: none; }
+      .toast { bottom: 24px; right: calc(var(--dock-w) + 2 * var(--board-gutter)); }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -569,10 +662,15 @@
       <span class="cb-context">Template Editor</span>
     </div>
     <div class="button-row">
-      <button type="button" id="themeToggleBtn" data-on-click="toggleTheme" data-args='[]'>Day Mode</button>
       <button type="button" data-on-click="openAddModal" data-args='[]'>Add</button>
-      <button type="button" data-on-click="resetAllToBaseline" data-args='[]' title="Reset everything back to the default">Reset All</button>
       <button type="button" data-on-click="navigateTo" data-args='["index.html"]'>Back to ED Doc</button>
+      <div class="forms-menu header-more">
+        <button type="button" class="forms-menu-btn" aria-haspopup="true" aria-expanded="false" data-on-click="toggleFormsMenu" data-args='[{"event": true}]'><span>More</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="forms-menu-list" role="menu">
+          <button type="button" role="menuitem" class="header-reset" data-on-click="resetAllToBaseline" data-args='[]' title="Reset everything back to the default">Reset All</button>
+        </div>
+      </div>
+      <button type="button" id="themeToggleBtn" class="btn-theme-toggle" data-on-click="toggleTheme" data-args='[]'><span>Day Mode</span></button>
     </div>
   </header>
 
@@ -667,6 +765,7 @@
   <script src="./assets/clinical_templates.js"></script>
   <script src="./assets/js/00-events.js"></script>
   <script src="./assets/js/00-schema-overrides.js"></script>
+  <script src="./assets/js/14-forms-menu.js"></script>
   <script src="./assets/js/schema-editor.js"></script>
 
 </body>

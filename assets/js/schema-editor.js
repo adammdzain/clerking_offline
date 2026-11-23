@@ -17,6 +17,11 @@ const NEW_SUBMENU = '__new';
 const SUBMENU_WORDING = { title: 'Tab name', noteHeader: 'Note heading', insertLabel: 'Insert button', clearLabel: 'Clear button' };
 
 const TE_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
+// Cards show in the same order as ED Doc's board; any other category follows in its own order.
+const TE_BOARD_ORDER = ['Patient Demographic', 'Medical History', 'HOPI', 'Vital Signs', 'Physical Examination', 'Impression and Plan', 'Regular & Routine cases'];
+// Same board motion as ED Doc (16-case-board.js): every tile move, resize, open and close runs this long (ms).
+const TE_BOARD_MS = 480;
+const TE_BOARD_EASE = 'cubic-bezier(.45, 0, .2, 1)';
 const TE_STATUS_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle class="ring" cx="8" cy="8" r="6.5"/><circle class="dot" cx="8" cy="8" r="3"/></svg>';
 const TE_ARROW = '<span class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></span>';
 const TE_UP = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>';
@@ -34,6 +39,8 @@ function init() {
 
   syncThemeButton();
   initSheet();
+  initSheetDock();
+  teInitFilterPill();
   document.getElementById('addForm').addEventListener('submit', submitAddModal);
   document.getElementById('chipForm').addEventListener('submit', submitChipModal);
   document.addEventListener('keydown', e => {
@@ -43,6 +50,7 @@ function init() {
     }
   });
   renderBoard();
+  new ResizeObserver(teFitBoard).observe(document.getElementById('main-sections'));
 }
 
 // ---------- Lookups ----------
@@ -250,7 +258,11 @@ function renderBoard() {
     const filtering = isFiltering();
     let total = 0;
     let shown = 0;
-    const cards = tree.map((cat, i) => {
+    const rank = cat => { const r = TE_BOARD_ORDER.indexOf(cat.category); return r < 0 ? TE_BOARD_ORDER.length : r; };
+    // Indexes stay those of the tree, so toggleSection(i) still finds its card.
+    const order = tree.map((cat, i) => i).sort((a, b) => rank(tree[a]) - rank(tree[b]) || a - b);
+    const cards = order.map(i => tree[i]).map((cat, n) => {
+      const i = order[n];
       const hits = cat.submenus.map(sub => ({
         sub,
         fields: sub.fields.filter(f => {
@@ -266,6 +278,7 @@ function renderBoard() {
     }).join('');
 
     board.innerHTML = cards || '<p class="te-empty">No parameters match this search.</p>';
+    teFitBoard();
     document.getElementById('teCounts').textContent = filtering ? `${shown} of ${total} parameters` : `${total} parameters`;
     refreshStatus();
   });
@@ -277,7 +290,7 @@ function fieldCount(cat) {
 
 function cardHtml(cat, i) {
   const open = cat.category === openSection;
-  return `<div class="main-section${open ? ' is-expanded' : ''}">
+  return `<div class="main-section${open ? ' is-expanded' : ''}" data-card="${i}">
     <button type="button" class="main-collapsible${open ? ' active' : ''}" aria-expanded="${open}" data-key="card:${i}" data-on-click="toggleSection" data-args="${args(i)}">
       <span class="te-title">${escapeHtml(cat.category)}</span><span class="te-count">${fieldCount(cat)}</span>
       <span class="cb-status" role="img" data-status="card-${i}">${TE_STATUS_ICON}</span>${TE_ARROW}
@@ -510,10 +523,97 @@ function afterEdit(subId) {
 function toggleSection(i) {
   const name = tree[i].category;
   const opening = openSection !== name;
+  const board = document.getElementById('main-sections');
+  // The board is rebuilt, so cards are matched across the render by their tree index.
+  const first = new Map(Array.from(board.querySelectorAll('.main-section[data-card]')).map(c => [c.dataset.card, c.getBoundingClientRect()]));
+  const wasOpen = board.querySelector('.main-section.is-expanded[data-card]');
+  const wasOpenKey = wasOpen ? wasOpen.dataset.card : null;
   openSection = opening ? name : null;
   openSubmenu = null;
   renderBoard();
-  if (opening) revealOpen('.main-section.is-expanded', '.main-content');
+  const opened = opening ? board.querySelector('.main-section.is-expanded') : null;
+  // Scroll first and fold the jump into the glide below, so the screen makes one movement, not two.
+  if (opened) teRevealCard(opened);
+  teAnimateBoard(board, first, wasOpenKey, opened);
+}
+
+// Cards keep their order: an open card takes its own full row, so later tiles never jump above it.
+// The last closed tile before each open card (and at the end) stretches over the cells left in its row.
+function teFitBoard() {
+  const board = document.getElementById('main-sections');
+  const cards = Array.from(board.querySelectorAll('.main-section'));
+  cards.forEach(c => { c.style.gridColumn = ''; });
+  const columns = getComputedStyle(board).gridTemplateColumns.split(' ').length;
+  if (columns < 2) return;
+  let run = [];
+  const close = () => {
+    if (run.length) run[run.length - 1].style.gridColumn = `span ${columns - (run.length - 1) % columns}`;
+    run = [];
+  };
+  cards.forEach(c => (c.classList.contains('is-expanded') ? close() : run.push(c)));
+  close();
+}
+
+function teRevealCard(card) {
+  const header = document.querySelector('body > header');
+  const offset = (getComputedStyle(header).position === 'sticky' ? header.offsetHeight : 0) + 12;
+  const top = card.getBoundingClientRect().top;
+  if (top >= offset && top <= window.innerHeight * 0.5) return;
+  window.scrollTo({ top: window.scrollY + top - offset, behavior: 'instant' });
+}
+
+function teMove(el, frames, options) {
+  if (TE_REDUCED_MOTION.matches || !el || !el.animate) return null;
+  return el.animate(frames, Object.assign({ duration: TE_BOARD_MS, easing: TE_BOARD_EASE }, options));
+}
+
+// Every tile glides from where it was to where it is now, growing or shrinking as its width changes.
+function teAnimateBoard(board, first, wasOpenKey, opened) {
+  if (TE_REDUCED_MOTION.matches) return;
+  document.querySelectorAll('.te-ghost').forEach(g => g.remove());
+  board.querySelectorAll('.main-section[data-card]').forEach(card => {
+    const a = first.get(card.dataset.card);
+    if (!a) return;
+    const b = card.getBoundingClientRect();
+    const dx = a.left - b.left;
+    const dy = a.top - b.top;
+    if (card === opened) {
+      const clip = `inset(0 ${Math.max(0, b.width - a.width)}px ${Math.max(0, b.height - a.height)}px 0 round 8px)`;
+      teMove(card, [{ transform: `translate(${dx}px, ${dy}px)`, clipPath: clip }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 8px)' }]);
+      teMove(card.querySelector('.main-content'), [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: TE_BOARD_MS * 0.7, delay: TE_BOARD_MS * 0.3, easing: 'ease-out', fill: 'backwards' });
+      return;
+    }
+    const resized = Math.abs(a.width - b.width) > 1;
+    if (dx || dy || resized) {
+      const from = { transform: `translate(${dx}px, ${dy}px)` };
+      const to = { transform: 'none' };
+      if (resized) { from.width = `${a.width}px`; to.width = `${b.width}px`; }
+      teMove(card, [from, to]);
+    }
+    if (card.dataset.card === wasOpenKey) {
+      teCloseGhost(a, b);
+      // The tile's summary and status come back once it has settled, rather than popping in mid-glide.
+      card.querySelectorAll('.cb-summary, .cb-status').forEach(el => {
+        teMove(el, [{ opacity: 0 }, { opacity: 1 }], { duration: TE_BOARD_MS * 0.4, delay: TE_BOARD_MS * 0.6, easing: 'ease-out', fill: 'backwards' });
+      });
+    }
+  });
+}
+
+// The card that closes leaves a fading shell behind the tiles, shrinking from its open size into its tile.
+function teCloseGhost(from, to) {
+  const ghost = document.createElement('div');
+  ghost.className = 'te-ghost';
+  Object.assign(ghost.style, { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px` });
+  document.body.appendChild(ghost);
+  const inset = [to.top - from.top, from.right - to.right, from.bottom - to.bottom, to.left - from.left].map(v => `${Math.max(0, v)}px`).join(' ');
+  const a = ghost.animate(
+    [{ clipPath: 'inset(0 round 8px)', opacity: 1 }, { clipPath: `inset(${inset} round 8px)`, opacity: 0 }],
+    { duration: TE_BOARD_MS, easing: TE_BOARD_EASE }
+  );
+  a.onfinish = a.oncancel = () => ghost.remove();
+  // A tab that stops painting mid-animation must not leave the shell on the page.
+  setTimeout(() => ghost.remove(), TE_BOARD_MS + 300);
 }
 
 function toggleSubmenu(id) {
@@ -1112,7 +1212,53 @@ function setNoteSheet(open) {
 }
 
 function toggleNoteSheet() {
+  if (TE_DOCKED.matches) return;
   setNoteSheet(!document.body.classList.contains('note-open'));
+}
+
+// On wide screens the Changes sheet is docked beside the board and always open (see the CSS of the same width).
+const TE_DOCKED = window.matchMedia('screen and (min-width: 1181px)');
+
+function initSheetDock() {
+  const header = document.querySelector('body > header');
+  const track = () => document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+  track();
+  new ResizeObserver(track).observe(header);
+  setNoteSheet(TE_DOCKED.matches);
+  TE_DOCKED.addEventListener('change', () => setNoteSheet(TE_DOCKED.matches));
+}
+
+// The type filter's highlight slides from the old choice to the new one.
+function teInitFilterPill() {
+  const list = document.querySelector('.te-segments');
+  let from = null;
+  list.addEventListener('click', e => {
+    const moving = list.querySelector(':scope > .te-pill');
+    const active = list.querySelector(':scope > button[aria-pressed="true"]');
+    from = e.target.closest('button') && (moving || active) ? { active, rect: (moving || active).getBoundingClientRect() } : null;
+  }, true);
+  // Registered on the document after 00-events.js, so this runs once the filter has switched.
+  document.addEventListener('click', e => {
+    if (!list.contains(e.target)) return;
+    const start = from;
+    from = null;
+    const next = list.querySelector(':scope > button[aria-pressed="true"]');
+    if (!start || !next || next === start.active || TE_REDUCED_MOTION.matches) return;
+    list.querySelectorAll(':scope > .te-pill').forEach(p => p.remove());
+    const box = list.getBoundingClientRect();
+    const place = r => ({ left: `${r.left - box.left}px`, top: `${r.top - box.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+    const pill = document.createElement('span');
+    pill.className = 'te-pill';
+    pill.setAttribute('aria-hidden', 'true');
+    Object.assign(pill.style, place(next.getBoundingClientRect()));
+    list.prepend(pill);
+    list.classList.add('te-pill-moving');
+    const a = pill.animate([place(start.rect), place(next.getBoundingClientRect())], { duration: 240, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+    a.onfinish = a.oncancel = () => {
+      pill.remove();
+      if (!list.querySelector(':scope > .te-pill')) list.classList.remove('te-pill-moving');
+    };
+  });
 }
 
 function initSheet() {
@@ -1128,7 +1274,7 @@ function initSheet() {
     const modal = document.querySelector('.modal-backdrop.active');
     if (modal) {
       closeModal(modal.id);
-    } else if (document.body.classList.contains('note-open')) {
+    } else if (!TE_DOCKED.matches && document.body.classList.contains('note-open')) {
       setNoteSheet(false);
       document.getElementById('noteToggle').focus();
     }
@@ -1143,9 +1289,15 @@ function showToast(msg) {
   showToast.timer = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+const TE_SUN_SVG = '<svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const TE_MOON_SVG = '<svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
 function syncThemeButton() {
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  document.getElementById('themeToggleBtn').textContent = isLight ? 'Night Mode' : 'Day Mode';
+  const btn = document.getElementById('themeToggleBtn');
+  // A small icon toggle, as in ED Doc; the words stay for screen readers.
+  btn.innerHTML = isLight ? `<span>Night Mode</span> ${TE_MOON_SVG}` : `<span>Day Mode</span> ${TE_SUN_SVG}`;
+  btn.title = isLight ? 'Switch to Night Mode (Ctrl+Shift+L)' : 'Switch to Day Mode (Ctrl+Shift+L)';
   document.getElementById('themeMetaColor').setAttribute('content', isLight ? '#f1f3f6' : '#0f1114');
 }
 
