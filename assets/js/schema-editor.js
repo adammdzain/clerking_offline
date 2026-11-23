@@ -1304,13 +1304,8 @@ function syncThemeButton() {
 function toggleTheme() {
   const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('ed_doc_theme', next);
+  try { localStorage.setItem('ed_doc_theme', next); } catch (e) { /* blocked or full: the theme just isn't remembered */ }
   syncThemeButton();
-}
-
-function escapeHtml(text) {
-  if (text == null) return '';
-  return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 window.addEventListener('DOMContentLoaded', init);

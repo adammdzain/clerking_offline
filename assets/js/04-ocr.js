@@ -114,7 +114,7 @@ function showWebcamError(err) {
   statusMsg.innerHTML = `
     <div style="font-size: 28px;">📷</div>
     <div style="font-weight: 600; font-size: 15px; color: #fca5a5;">Camera Unavailable</div>
-    <div style="max-width: 360px; line-height: 1.4; color: #cbd5e1; font-size: 13px;">${escapeExamHtml(msgText)}</div>
+    <div style="max-width: 360px; line-height: 1.4; color: #cbd5e1; font-size: 13px;">${escapeHtml(msgText)}</div>
     <div style="display:flex; gap:8px; margin-top:10px;">
       <button type="button" class="btn-primary" id="btnWebcamErrorFallback" style="font-size:12px; padding:8px 14px;">
         Choose Image File

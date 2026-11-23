@@ -309,9 +309,39 @@ function initSessionRestore() {
   openModalA11y(modal);
 }
 
+// ---------- The 12-hour limit, for a tab left open ----------
+// readSavedDraft/readSavedSession enforce the limit when ED Doc is opened. A workstation tab can
+// also stay open untouched past it, still showing and storing the patient, so an open tab checks
+// too: 12 hours after the last edit it wipes the saved copy and starts a blank page.
+function sessionLastEditTs() {
+  let newest = 0;
+  try {
+    newest = Number(localStorage.getItem(DRAFT_TS_KEY)) || 0;
+    const saved = JSON.parse(localStorage.getItem(SESSION_FIELDS_KEY) || 'null');
+    if (saved && Number(saved.ts) > newest) newest = Number(saved.ts);
+  } catch (e) {}
+  return newest;
+}
+
+function expireIdleSession() {
+  if (window.edDocPersistenceOff) return;
+  const ts = sessionLastEditTs();
+  if (!ts || Date.now() - ts <= DRAFT_MAX_AGE_MS) return;
+  window.edDocPersistenceOff = true;
+  window.edDocSkipUnloadPrompt = true;
+  wipeDraftStorage();
+  wipeSessionStorage();
+  try { Object.keys(sessionStorage).forEach(k => sessionStorage.removeItem(k)); } catch (e) {}
+  const area = document.getElementById('docArea');
+  if (area) area.value = '';
+  location.reload();
+}
+
 // Registered last, so the templates are drawn and every other script has set itself up.
 document.addEventListener('DOMContentLoaded', () => {
   initSessionRestore();
+  setInterval(expireIdleSession, 60 * 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) expireIdleSession(); });
 
   ['input', 'change', 'click'].forEach(type => {
     let timer = null;

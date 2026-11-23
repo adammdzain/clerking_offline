@@ -1,7 +1,7 @@
 // The old address, eddoc.adambaik39.workers.dev, after ED Doc moved to eddoc.pages.dev.
 //
 // Deployed as the Worker "eddoc" in place of the app:
-//   CLOUDFLARE_ACCOUNT_ID=cff1788059ebc353d7e561070dff02c8 npx wrangler deploy scripts/old-address-worker.js --name eddoc --compatibility-date 2026-11-01
+//   CLOUDFLARE_ACCOUNT_ID=<account id> npx wrangler deploy scripts/old-address-worker.js --name eddoc --compatibility-date 2026-11-01
 //
 // Every page and file redirects to the same path on the new address. The one exception is
 // sw.js: devices that installed ED Doc at the old address run its service worker, which

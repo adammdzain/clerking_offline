@@ -408,9 +408,9 @@ function renderTraumaPins() {
     itemEl.innerHTML = `
       <span style="display:flex; align-items:center; gap:6px;">
         <span style="width:16px; height:16px; border-radius:50%; background:${p.color}; color:#fff; font-size:9px; font-weight:bold; display:inline-flex; align-items:center; justify-content:center;">${p.type}${idx + 1}</span>
-        <strong>${escapeExamHtml(p.label)}</strong> &mdash; ${escapeExamHtml(p.loc)}
+        <strong>${escapeHtml(p.label)}</strong> &mdash; ${escapeHtml(p.loc)}
       </span>
-      <span style="color:var(--muted); font-size:10px;">${escapeExamHtml(p.region)}</span>
+      <span style="color:var(--muted); font-size:10px;">${escapeHtml(p.region)}</span>
     `;
     itemEl.style.flexWrap = 'wrap';
     const noteEl = document.createElement('input');

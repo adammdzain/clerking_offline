@@ -13,47 +13,54 @@ function getClinicalProfile() {
   // Older builds defaulted to HKL / Zon Kuning; migrate saved values
   const norm = v => v === 'HOSPITAL KUALA LUMPUR' ? 'HOSPITAL LAHAD DATU'
     : (v === 'ED / ZON KUNING' || v === 'ZON KUNING') ? 'ED' : v;
+  // Older builds kept each value under per-form keys: the first one found is used.
+  const legacy = (...keys) => {
+    for (const k of keys) {
+      const v = storageGet(k);
+      if (v) return v;
+    }
+    return '';
+  };
 
   return {
-    hospital: norm(profile.hospital || localStorage.getItem('ra301_hospital') || localStorage.getItem('pat301_hospital') || localStorage.getItem('rujukan_hospital') || localStorage.getItem('bt105_hospital') || ''),
-    wad: norm(profile.wad || localStorage.getItem('ra301_wad') || localStorage.getItem('pat301_wad') || localStorage.getItem('bt105_wad') || ''),
-    doctorName: profile.doctorName || localStorage.getItem('ra301_doctor_name') || localStorage.getItem('pat301_doctor_name') || localStorage.getItem('rujukan_doctor_name') || localStorage.getItem('bt105_doctor_name') || '',
-    disiplin: profile.disiplin || localStorage.getItem('ra301_disiplin') || '',
-    jawatan: profile.jawatan || localStorage.getItem('rujukan_jawatan') || '',
-    unit: profile.unit || localStorage.getItem('bt105_unit') || '',
-    consultant: profile.consultant || localStorage.getItem('bt105_consultant') || ''
+    hospital: norm(profile.hospital || legacy('ra301_hospital', 'pat301_hospital', 'rujukan_hospital', 'bt105_hospital')),
+    wad: norm(profile.wad || legacy('ra301_wad', 'pat301_wad', 'bt105_wad')),
+    doctorName: profile.doctorName || legacy('ra301_doctor_name', 'pat301_doctor_name', 'rujukan_doctor_name', 'bt105_doctor_name'),
+    disiplin: profile.disiplin || legacy('ra301_disiplin'),
+    jawatan: profile.jawatan || legacy('rujukan_jawatan'),
+    unit: profile.unit || legacy('bt105_unit'),
+    consultant: profile.consultant || legacy('bt105_consultant')
   };
+}
+
+// localStorage throws when the browser blocks it (strict privacy settings) or it is full:
+// the profile is then simply not remembered, and nothing else breaks.
+function storageGet(key) {
+  try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+
+function storageSet(key, value) {
+  try { localStorage.setItem(key, value); } catch (e) {}
 }
 
 function saveClinicalProfile(updates) {
   const current = getClinicalProfile();
   const merged = { ...current, ...updates };
-  try {
-    localStorage.setItem(CLINICAL_PROFILE_KEY, JSON.stringify(merged));
-  } catch (e) {}
+  storageSet(CLINICAL_PROFILE_KEY, JSON.stringify(merged));
 
   // Keep legacy keys synced for backward compatibility
-  if (merged.hospital) {
-    localStorage.setItem('pat301_hospital', merged.hospital);
-    localStorage.setItem('ra301_hospital', merged.hospital);
-    localStorage.setItem('rujukan_hospital', merged.hospital);
-    localStorage.setItem('bt105_hospital', merged.hospital);
-  }
-  if (merged.wad) {
-    localStorage.setItem('pat301_wad', merged.wad);
-    localStorage.setItem('ra301_wad', merged.wad);
-    localStorage.setItem('bt105_wad', merged.wad);
-  }
-  if (merged.doctorName) {
-    localStorage.setItem('pat301_doctor_name', merged.doctorName);
-    localStorage.setItem('ra301_doctor_name', merged.doctorName);
-    localStorage.setItem('rujukan_doctor_name', merged.doctorName);
-    localStorage.setItem('bt105_doctor_name', merged.doctorName);
-  }
-  if (merged.disiplin) localStorage.setItem('ra301_disiplin', merged.disiplin);
-  if (merged.jawatan) localStorage.setItem('rujukan_jawatan', merged.jawatan);
-  if (merged.unit) localStorage.setItem('bt105_unit', merged.unit);
-  if (merged.consultant) localStorage.setItem('bt105_consultant', merged.consultant);
+  const legacyKeys = {
+    hospital: ['pat301_hospital', 'ra301_hospital', 'rujukan_hospital', 'bt105_hospital'],
+    wad: ['pat301_wad', 'ra301_wad', 'bt105_wad'],
+    doctorName: ['pat301_doctor_name', 'ra301_doctor_name', 'rujukan_doctor_name', 'bt105_doctor_name'],
+    disiplin: ['ra301_disiplin'],
+    jawatan: ['rujukan_jawatan'],
+    unit: ['bt105_unit'],
+    consultant: ['bt105_consultant']
+  };
+  Object.entries(legacyKeys).forEach(([field, keys]) => {
+    if (merged[field]) keys.forEach(k => storageSet(k, merged[field]));
+  });
 }
 
 // ----------------------------------------------------

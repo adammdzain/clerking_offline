@@ -2,7 +2,7 @@
    THEME TOGGLE (DAY / NIGHT CLINICAL MODES)
    ======================================================= */
 function initTheme() {
-  const savedTheme = localStorage.getItem('ed_doc_theme');
+  const savedTheme = storageGet('ed_doc_theme');
   const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   const theme = savedTheme || (prefersLight ? 'light' : 'dark');
   applyTheme(theme);
@@ -25,7 +25,7 @@ function applyTheme(theme) {
   if (meta) {
     meta.setAttribute('content', isLight ? "#f1f3f6" : "#0f1114");
   }
-  localStorage.setItem('ed_doc_theme', theme);
+  storageSet('ed_doc_theme', theme);
 }
 
 function toggleTheme() {
@@ -207,10 +207,20 @@ function triggerPWAInstall() {
    ======================================================= */
 document.addEventListener('keydown', (e) => {
   // Ctrl/Cmd + Shift + L -> Toggle Theme
-  // Ctrl/Cmd + Shift + V -> Toggle Voice Dictation
-  if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'V' || e.key === 'v')) {
+  // Alt/Option + Shift + D -> Toggle Voice Dictation
+  // Alt/Option + Shift + 1/2/3 -> PER. PAT 301 / PER.SS-RA301 / Surat Rujukan
+  // Alt+Shift, not Ctrl/Cmd: Ctrl/Cmd+Shift+V is "paste as plain text" and Ctrl/Cmd+1-3 switch
+  // browser tabs, both used all day. e.code, because Option on a Mac changes e.key.
+  const altShift = e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey;
+  if (altShift && e.code === 'KeyD') {
     e.preventDefault();
     toggleVoiceDictation();
+    return;
+  }
+  const formShortcut = { Digit1: 'openPat301Modal', Digit2: 'openRa301Modal', Digit3: 'openRujukanModal' }[e.code];
+  if (altShift && formShortcut) {
+    e.preventDefault();
+    if (typeof window[formShortcut] === 'function') window[formShortcut]();
     return;
   }
 
@@ -228,27 +238,6 @@ document.addEventListener('keydown', (e) => {
       if (typeof copyNotes === 'function') copyNotes();
       return;
     }
-  }
-
-  // Ctrl/Cmd + 1 -> Open PER. PAT 301
-  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === '1') {
-    e.preventDefault();
-    if (typeof openPat301Modal === 'function') openPat301Modal();
-    return;
-  }
-
-  // Ctrl/Cmd + 2 -> Open PER.SS-RA301
-  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === '2') {
-    e.preventDefault();
-    if (typeof openRa301Modal === 'function') openRa301Modal();
-    return;
-  }
-
-  // Ctrl/Cmd + 3 -> Open Surat Rujukan
-  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === '3') {
-    e.preventDefault();
-    if (typeof openRujukanModal === 'function') openRujukanModal();
-    return;
   }
 });
 

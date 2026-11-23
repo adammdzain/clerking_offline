@@ -383,7 +383,7 @@ function openExamPinPanel(idx) {
   panel.innerHTML = '';
   const head = document.createElement('div');
   head.className = 'exam-panel-title';
-  head.innerHTML = `<span><b>Pin P${idx + 1}</b> <small>${escapeExamHtml(pin.loc)} · ${cfg.title}</small></span>`;
+  head.innerHTML = `<span><b>Pin P${idx + 1}</b> <small>${escapeHtml(pin.loc)} · ${cfg.title}</small></span>`;
   const doneBtn = document.createElement('button');
   doneBtn.type = 'button'; doneBtn.className = 'injury-tool-btn'; doneBtn.textContent = 'Done';
   doneBtn.onclick = closeExamPanel;
@@ -458,7 +458,7 @@ function renderExamMap() {
       item.className = 'injury-item exam-ledger-item';
       const f = examRegionFindings(en).join(', ');
       item.innerHTML = `<span class="exam-swatch" style="background:${cfg.shade(reg)}"></span>` +
-        `<span class="exam-ledger-text"><b>${reg.label}${sys === 'resp' ? ' (' + reg.view + ')' : ''}</b>: ${escapeExamHtml(f) || '-'}${en.note ? ' <em>- ' + escapeExamHtml(en.note) + '</em>' : ''}</span>`;
+        `<span class="exam-ledger-text"><b>${reg.label}${sys === 'resp' ? ' (' + reg.view + ')' : ''}</b>: ${escapeHtml(f) || '-'}${en.note ? ' <em>- ' + escapeHtml(en.note) + '</em>' : ''}</span>`;
       const rm = document.createElement('button');
       rm.type = 'button'; rm.className = 'exam-ledger-remove'; rm.title = 'Remove'; rm.textContent = '\u00d7';
       rm.onclick = () => removeExamRegion(k);
@@ -470,7 +470,7 @@ function renderExamMap() {
       const item = document.createElement('div');
       item.className = 'injury-item exam-ledger-item';
       item.innerHTML = `<span class="exam-swatch" style="background:transparent; border:2px solid ${cfg.color}"></span>` +
-        `<span class="exam-ledger-text"><b>P${i + 1} ${escapeExamHtml(p.loc)}</b>: ${p.label ? escapeExamHtml(p.label) : '<em>no label yet</em>'}</span>`;
+        `<span class="exam-ledger-text"><b>P${i + 1} ${escapeHtml(p.loc)}</b>: ${p.label ? escapeHtml(p.label) : '<em>no label yet</em>'}</span>`;
       const rm = document.createElement('button');
       rm.type = 'button'; rm.className = 'exam-ledger-remove'; rm.title = 'Remove'; rm.textContent = '\u00d7';
       rm.onclick = () => removeExamPin(i);
@@ -485,10 +485,6 @@ function renderExamMap() {
     const total = EXAM_SYSTEM_KEYS.reduce((n, k) => n + examSystemCount(k), 0);
     countEl.textContent = `${total} finding${total === 1 ? '' : 's'} \u00b7 Resp ${examSystemCount('resp')} \u00b7 CVS ${examSystemCount('cvs')} \u00b7 Abd ${examSystemCount('abd')}`;
   }
-}
-
-function escapeExamHtml(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
 
 // Builds the note lines for one system (blank-by-default: nothing marked = nothing written)
@@ -979,7 +975,7 @@ function htmlSafe(strings, ...vals) {
     out += str;
     if (i < vals.length) {
       const v = vals[i];
-      out += (v && typeof v === 'object' && '__rawHtml' in v) ? v.__rawHtml : escapeExamHtml(v);
+      out += (v && typeof v === 'object' && '__rawHtml' in v) ? v.__rawHtml : escapeHtml(v);
     }
   });
   return out;

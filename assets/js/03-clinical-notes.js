@@ -1011,7 +1011,7 @@ function findTemplateSubmenu(sectionId) {
 function collectTemplateParts(targetSubmenu) {
   return formatSubmenuParts(targetSubmenu, f => {
     const el = document.getElementById(f.id);
-    const value = sanitize(el ? el.value : '');
+    const value = cleanText(el ? el.value : '');
     return f.customInput === 'gcs-evm' ? gcsText(value) : value;
   });
 }
@@ -1114,8 +1114,33 @@ document.addEventListener('input', e => {
 });
 
 // Initialize dynamic clinical templates & two-way chips on load
+// A field or submenu added in the Template Editor (or a setup file) becomes an element with its
+// id. If that id is already taken by ED Doc's own page (docArea, patientName, ...) the note would
+// read the wrong box, so the added item is left out. Runs before the first render, when every
+// element with an id belongs to the fixed page.
+function dropClashingCustomTemplates(templates) {
+  const clashes = id => !!document.getElementById(id);
+  templates.forEach(cat => {
+    cat.submenus = cat.submenus.filter(sub => {
+      if (sub.custom && clashes(sub.id)) {
+        console.warn('[Templates] Skipped added submenu "' + sub.id + '": that id is already used by ED Doc');
+        return false;
+      }
+      sub.fields = sub.fields.filter(f => {
+        if (!f.custom || !clashes(f.id)) return true;
+        console.warn('[Templates] Skipped added field "' + f.id + '": that id is already used by ED Doc');
+        return false;
+      });
+      return true;
+    });
+  });
+}
+
 function initClinicalTemplates() {
-  if (window.CLINICAL_TEMPLATES) applySchemaOverrides(window.CLINICAL_TEMPLATES, readSchemaOverrides());
+  if (window.CLINICAL_TEMPLATES) {
+    applySchemaOverrides(window.CLINICAL_TEMPLATES, readSchemaOverrides());
+    dropClashingCustomTemplates(window.CLINICAL_TEMPLATES);
+  }
   renderClinicalTemplates();
   if (typeof setupChipSync === 'function') setupChipSync();
 }

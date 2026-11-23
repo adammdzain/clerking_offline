@@ -24,10 +24,19 @@ PUBLIC_DIRS = [
 ]
 
 
+def is_junk(name: str) -> bool:
+    """Files the OS or a sync client drops into folders: never published or served.
+    Hidden files (.DS_Store, ...) and macOS custom-icon files, named "Icon" plus a
+    carriage return, which Google Drive keeps recreating in every folder."""
+    return name.startswith(".") or name == "Icon\r"
+
+
 def is_public(rel_path: str) -> bool:
     """True if a URL path (relative, POSIX-style, no leading slash) may be served."""
     rel = os.path.normpath(rel_path).replace(os.sep, "/")
     if rel.startswith("..") or os.path.isabs(rel):
+        return False
+    if any(is_junk(part) for part in rel.split("/")):
         return False
     if rel in PUBLIC_FILES:
         return True
@@ -99,9 +108,9 @@ def public_files(root: str):
     for d in PUBLIC_DIRS:
         base = os.path.join(root, d)
         for dirpath, dirnames, filenames in os.walk(base):
-            dirnames[:] = [x for x in dirnames if not x.startswith(".")]
+            dirnames[:] = [x for x in dirnames if not is_junk(x)]
             for fn in filenames:
-                if fn.startswith("."):
+                if is_junk(fn):
                     continue
                 full = os.path.join(dirpath, fn)
                 yield os.path.relpath(full, root).replace(os.sep, "/")

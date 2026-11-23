@@ -18,6 +18,7 @@ const CORE_ASSETS = [
   './assets/clinical_templates.js',
   './assets/js/00-theme-init.js',
   './assets/js/00-handover.js',
+  './assets/js/00-html.js',
   './assets/js/00-events.js',
   './assets/js/00-schema-overrides.js',
   './assets/js/schema-editor.js',

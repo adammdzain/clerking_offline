@@ -46,12 +46,22 @@ function isPlainObject(value) {
   return !!value && typeof value === 'object' && !Array.isArray(value);
 }
 
-// Makes any parsed value safe to apply: unknown keys and wrong types are dropped.
+// A field or submenu id becomes an element id in ED Doc, so a setup file (possibly from someone
+// else) may only use plain ids: a letter, then letters, digits, "-" or "_". Every shipped id and
+// every id the editor makes fits. Names that would reach Object.prototype ("__proto__",
+// "constructor", ...) are refused by name.
+const SCHEMA_RESERVED_IDS = new Set(['__proto__', 'constructor', 'prototype', 'hasOwnProperty', 'toString', 'valueOf']);
+function isSafeSchemaId(id) {
+  return typeof id === 'string' && /^[A-Za-z][A-Za-z0-9_-]{0,80}$/.test(id) && !SCHEMA_RESERVED_IDS.has(id);
+}
+
+// Makes any parsed value safe to apply: unknown keys, unsafe ids and wrong types are dropped.
 function normalizeSchemaOverrides(raw) {
   const ov = emptySchemaOverrides();
   if (!isPlainObject(raw)) return ov;
   const text = v => (typeof v === 'string' ? v : undefined);
-  const ids = list => (Array.isArray(list) ? list.filter(id => typeof id === 'string') : undefined);
+  const ids = list => (Array.isArray(list) ? list.filter(isSafeSchemaId) : undefined);
+  const entries = obj => Object.entries(obj).filter(([id]) => isSafeSchemaId(id));
   const fieldProps = src => {
     const out = {};
     if (!isPlainObject(src)) return out;
@@ -62,10 +72,10 @@ function normalizeSchemaOverrides(raw) {
   };
 
   if (isPlainObject(raw.fields)) {
-    Object.entries(raw.fields).forEach(([id, src]) => { ov.fields[id] = fieldProps(src); });
+    entries(raw.fields).forEach(([id, src]) => { ov.fields[id] = fieldProps(src); });
   }
   if (isPlainObject(raw.submenus)) {
-    Object.entries(raw.submenus).forEach(([id, src]) => {
+    entries(raw.submenus).forEach(([id, src]) => {
       if (!isPlainObject(src)) return;
       const out = {};
       SCHEMA_SUBMENU_KEYS.forEach(k => { if (text(src[k]) !== undefined) out[k] = src[k]; });
@@ -74,16 +84,18 @@ function normalizeSchemaOverrides(raw) {
     });
   }
   if (isPlainObject(raw.order)) {
-    Object.entries(raw.order).forEach(([category, list]) => { if (ids(list)) ov.order[category] = ids(list); });
+    Object.entries(raw.order).forEach(([category, list]) => {
+      if (!SCHEMA_RESERVED_IDS.has(category) && ids(list)) ov.order[category] = ids(list);
+    });
   }
   if (isPlainObject(raw.addedFields)) {
-    Object.entries(raw.addedFields).forEach(([id, src]) => {
-      if (!isPlainObject(src) || typeof src.home !== 'string') return;
+    entries(raw.addedFields).forEach(([id, src]) => {
+      if (!isPlainObject(src) || !isSafeSchemaId(src.home)) return;
       ov.addedFields[id] = Object.assign({ home: src.home, label: id }, fieldProps(src));
     });
   }
   if (isPlainObject(raw.addedSubmenus)) {
-    Object.entries(raw.addedSubmenus).forEach(([id, src]) => {
+    entries(raw.addedSubmenus).forEach(([id, src]) => {
       if (!isPlainObject(src) || typeof src.category !== 'string' || typeof src.title !== 'string') return;
       ov.addedSubmenus[id] = { category: src.category, title: src.title, noteHeader: text(src.noteHeader) || src.title };
     });

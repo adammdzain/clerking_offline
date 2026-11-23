@@ -286,11 +286,11 @@ function updateDictationUI(active) {
     if (active) {
       btn.classList.add('recording');
       btn.innerHTML = `<span>Stop Dictation</span> ${stopSvg}`;
-      btn.title = 'Click to stop voice dictation (Ctrl+Shift+V)';
+      btn.title = 'Click to stop voice dictation (Alt+Shift+D)';
     } else {
       btn.classList.remove('recording');
       btn.innerHTML = `<span>Voice Dictation</span> ${micSvg}`;
-      btn.title = 'Start Voice Dictation (Ctrl+Shift+V)';
+      btn.title = 'Start Voice Dictation (Alt+Shift+D)';
     }
   }
   if (wrap) {

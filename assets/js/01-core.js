@@ -26,8 +26,10 @@ document.querySelectorAll('.main-collapsible').forEach(btn => {
 
 
 
-// Plain text sanitization (preserves clinical operators like <, >, & without HTML entity corruption)
-function sanitize(str) {
+// Tidies a typed value for the note: trims it, and turns null/undefined into ''. It does NOT make
+// text safe for HTML (the note is plain text, so "<", ">" and "&" are kept as typed); use
+// escapeHtml (00-html.js) for anything put into markup.
+function cleanText(str) {
   if (str === null || str === undefined) return '';
   return String(str).trim();
 }
