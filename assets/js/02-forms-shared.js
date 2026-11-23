@@ -318,10 +318,16 @@ class FormPreviewManager {
   }
 
   // Every PDF goes through here so text is made printable and problems reach the user.
-  async build(generate) {
+  // The generators also hand back a blob URL. Only the preview uses it (as the iframe fallback);
+  // everywhere else it is released at once, so no copy of the patient's PDF stays in memory.
+  async build(generate, { keepUrl = false } = {}) {
     await ensurePdfLibraries();
     const { data, warnings: textWarnings } = cleanFormDataForPdf(this.getFormData());
     const res = await generate(data);
+    if (!keepUrl && res.url) {
+      URL.revokeObjectURL(res.url);
+      res.url = null;
+    }
     this.currentPdfBytes = res.pdfBytes;
     const warnings = textWarnings.concat(res.warnings || []);
     this.showWarnings(warnings);
@@ -358,7 +364,7 @@ class FormPreviewManager {
     if (loading) loading.classList.add('active');
 
     try {
-      const { res } = await this.build(this.generatePreviewPdfBlob || this.generatePdfBlob);
+      const { res } = await this.build(this.generatePreviewPdfBlob || this.generatePdfBlob, { keepUrl: true });
 
       if (this.currentBlobUrl) {
         URL.revokeObjectURL(this.currentBlobUrl);

@@ -231,11 +231,13 @@ function applySavedSession(data) {
 }
 
 // ---------- The question on load ----------
+// Whoever opens ED Doc next on a shared computer sees this before choosing, so it names the
+// patient by first name only: enough for the doctor to recognise them, not the full name or IC.
 function describeSavedPatient(session) {
   const values = (session && session.data.values) || {};
-  const parts = ['patientName', 'patientAge', 'patientGender', 'patientHospitalID']
-    .map(id => (typeof values[id] === 'string' ? values[id].trim() : ''))
-    .filter(Boolean);
+  const text = id => (typeof values[id] === 'string' ? values[id].trim() : '');
+  const firstName = text('patientName').split(/\s+/)[0] || '';
+  const parts = [firstName, text('patientAge'), text('patientGender')].filter(Boolean);
   return parts.join(' · ') || 'No patient name was entered';
 }
 

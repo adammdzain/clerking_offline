@@ -227,9 +227,24 @@ function toggleVoiceDictation() {
   }
 }
 
+// The browser's speech engine sends the audio to its maker's servers (Google for Chrome and
+// Edge, Apple for Safari): the one part of ED Doc where patient data leaves this device.
+// The user is told once, before the first dictation, and can say no.
+const DICTATION_NOTICE_KEY = 'ed_doc_dictation_notice_ok';
+let dictationNoticeAccepted = false;
+
+function dictationNoticeOk() {
+  if (dictationNoticeAccepted) return true;
+  try { if (localStorage.getItem(DICTATION_NOTICE_KEY) === '1') return (dictationNoticeAccepted = true); } catch (e) {}
+  const ok = confirm('Voice dictation sends your voice over the internet to the browser\'s speech service (Google for Chrome and Edge, Apple for Safari) to turn it into text.\n\nEverything else in ED Doc stays on this device. Avoid saying names, IC numbers or other details that identify the patient.\n\nTurn on voice dictation?');
+  if (!ok) return false;
+  dictationNoticeAccepted = true;
+  try { localStorage.setItem(DICTATION_NOTICE_KEY, '1'); } catch (e) {}
+  return true;
+}
+
 function startVoiceDictation() {
-  // Web Speech engine: requires internet, and audio is sent to the browser
-  // vendor's speech service, so keep it non-identifying.
+  if (!dictationNoticeOk()) return;
   if (!recognitionInstance) {
     recognitionInstance = initSpeechRecognition();
   }

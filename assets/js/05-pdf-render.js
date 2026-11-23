@@ -99,18 +99,21 @@ async function shareOrOpenPdf(pdfBytes, filename) {
     }
   }
 
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (isMobile) {
     downloadPdfFile(pdfBytes, filename);
     showToast('PDF downloaded to phone storage!');
-  } else {
-    const win = window.open(url, '_blank');
-    if (!win) {
-      downloadPdfFile(pdfBytes, filename);
-    }
+    return;
   }
+  const url = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+  const win = window.open(url, '_blank');
+  if (!win) {
+    URL.revokeObjectURL(url);
+    downloadPdfFile(pdfBytes, filename);
+    return;
+  }
+  // The new tab has read the PDF well before this; releasing it frees the patient's copy here.
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 function downloadPdfFile(pdfBytes, filename) {
