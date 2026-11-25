@@ -70,7 +70,7 @@ def build_helper_zip():
         sys.exit("missing " + HELPER_PASSWORD_FILE + " (one line: the helper zip password)")
     with open(HELPER_PASSWORD_FILE, encoding="utf-8") as fh:
         password = fh.read().strip()
-    names = sorted(n for n in os.listdir(HELPER_DIR) if not is_junk(n) and not n.endswith(".log") and n != "ehis-cred.txt")
+    names = sorted(n for n in os.listdir(HELPER_DIR) if os.path.isfile(os.path.join(HELPER_DIR, n)) and not is_junk(n) and not n.endswith(".log") and n != "ehis-cred.txt")
     out = os.path.join(DIST, HELPER_ZIP)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     # -j: flat zip, -X: no Mac extra attributes, -D: no directory entries

@@ -38,7 +38,7 @@
     'undoExamAction', 'undoTraumaPin', 'wipePatientData',
     'addSerialColumn', 'clearSerialPatient', 'closeSerialModal', 'downloadSerialPdf', 'getSerialLabs',
     'openOrShareSerialPdf', 'openSerialModal', 'printSerialPdf', 'refreshSerialPreview',
-    'toggleSerialMobileView', 'openEhis', 'orderBloods', 'openPcHelperModal', 'closePcHelperModal', 'checkPcHelper',
+    'toggleSerialMobileView', 'openEhis', 'orderBloods', 'openPcHelperModal', 'closePcHelperModal', 'checkPcHelper', 'openPcHelperSetup',
     // schema_editor.html and schema-editor.js
     'addChips', 'chooseSetupFile', 'closeAddModal', 'closeChipModal', 'deleteChip', 'deleteField',
     'deleteSubmenu', 'downloadTemplatesFile', 'loadSetupFile', 'moveChip', 'moveField',

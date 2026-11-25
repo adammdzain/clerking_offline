@@ -3,7 +3,7 @@
    helper on this PC) and the eHIS menu's Open eHIS and Order bloods. The helper itself is pc-helper/ in
    the repo; scripts/build_dist.py zips it into downloads/eddoc-pc-helper.zip.
    ======================================================= */
-const EHIS_HELPER_VERSION = '2026.11.25';   // keep equal to $HelperVersion in pc-helper/ehis-to-eddoc.ps1 (build checks)
+const EHIS_HELPER_VERSION = '2026.11.25.2';   // keep equal to $HelperVersion in pc-helper/ehis-to-eddoc.ps1 (build checks)
 
 function openPcHelperModal() {
   document.getElementById('pcHelperStatus').textContent = '';
@@ -28,8 +28,8 @@ function checkPcHelper() {
   setPcHelperStatus('Checking this PC...', false);
   return ehisRequest('ver', document.getElementById('btnPcHelperCheck'), 'Check this PC', (d) => {
     if (d.version === EHIS_HELPER_VERSION) setPcHelperStatus(`Installed and up to date (version ${d.version}).`, true);
-    else setPcHelperStatus(`Installed, but version ${d.version || '?'} is not the current ${EHIS_HELPER_VERSION}. Download the installer above and run install.bat again.`, false);
-  }, () => setPcHelperStatus(`Not installed, or older than version ${EHIS_HELPER_VERSION} (older ones cannot answer). Download the installer above and run install.bat.`, false));
+    else setPcHelperStatus(`Installed, but version ${d.version || '?'} is not the current ${EHIS_HELPER_VERSION}. Download the installer above, extract it and double-click Setup, then Update.`, false);
+  }, () => setPcHelperStatus(`Not installed, or older than version ${EHIS_HELPER_VERSION} (older ones cannot answer). Download the installer above, extract it and double-click Setup.`, false));
 }
 
 // eHIS menu (header). Nothing comes back to the page for either: the PC helper runs the
@@ -37,6 +37,13 @@ function checkPcHelper() {
 function openEhis() {
   window.location.href = 'eddoc-ehis://login';
   showToast('Opening eHIS... (only on PCs with the PC helper)', 4000);
+}
+
+// Opens the helper's Setup window (ehis-setup.ps1) from the installed folder: saved login,
+// order sets, repair, uninstall.
+function openPcHelperSetup() {
+  window.location.href = 'eddoc-ehis://setup';
+  showToast('Opening Setup on this PC... (needs the PC helper, version 2026.11.25.2 or newer)', 5000);
 }
 
 function orderBloods() {

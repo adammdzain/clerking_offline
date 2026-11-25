@@ -5943,18 +5943,20 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
           <ol style="margin:0; padding-left:20px; font-size:13px; line-height:1.6;">
             <li><a href="./downloads/eddoc-pc-helper.zip" download class="btn-bt105" style="display:inline-block; text-decoration:none; padding:5px 12px;">Download installer (.zip)</a> &mdash; the zip has a password: ask Dr Adam.</li>
             <li>Right-click the downloaded zip &gt; <b>Extract All...</b> (with WinRAR: <b>Extract to eddoc-pc-helper\</b>) and type the password. Check Caps Lock: a wrong password leaves files out.</li>
-            <li>In the extracted folder double-click <b>install.bat</b> (click Run if Windows asks).</li>
-            <li>Answer <b>Save login?</b> &mdash; on a shared PC answer N (Open eHIS then just shows the login page).</li>
-            <li>Click <b>eHIS</b> &gt; <b>Open eHIS</b> (top right) once. Chrome asks &ldquo;Open eHIS to ED Doc?&rdquo;: tick <b>Always allow</b>, then Open.</li>
+            <li>In the extracted folder double-click <b>Setup</b> (click Open or Run if Windows asks). A Setup window opens.</li>
+            <li>Optional: tick <b>Save my eHIS login</b> and type it, so Open eHIS logs you in by itself. On a shared PC leave it unticked.</li>
+            <li>Click <b>Install</b>, then <b>Test it now</b>. In ED Doc click <b>eHIS</b> &gt; <b>Open eHIS</b> once. Chrome asks &ldquo;Open eHIS to ED Doc?&rdquo;: tick <b>Always allow</b>, then Open.</li>
           </ol>
-          <p style="margin:0; font-size:12px; color:var(--muted)">Updating: same steps; your saved login and your order sets file are kept. Installs for the current Windows user only, no admin needed.</p>
+          <p style="margin:0; font-size:12px; color:var(--muted)">Updating: same steps, then <b>Update</b>; your saved login and your order sets file are kept. Installs for the current Windows user only, no admin needed.</p>
         </div>
         <div class="form-card">
           <div class="form-card-title"><span>Check this PC</span></div>
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <button type="button" id="btnPcHelperCheck" class="btn-secondary" data-on-click="checkPcHelper" data-args='[]'><span>Check this PC</span></button>
+            <button type="button" class="btn-secondary" data-on-click="openPcHelperSetup" data-args='[]'><span>Open Setup on this PC</span></button>
             <span id="pcHelperStatus" role="status" style="font-size:12.5px;"></span>
           </div>
+          <p style="margin:0; font-size:12px; color:var(--muted)">Open Setup to change the saved eHIS login, edit order sets, repair or uninstall (helper version 2026.11.25.2 or newer).</p>
         </div>
         <div class="form-card">
           <div class="form-card-title"><span>Order bloods</span></div>
