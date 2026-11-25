@@ -809,7 +809,7 @@ function renderPlainField(container, field) {
     chipWrap.className = 'chip-container';
     chipWrap.dataset.target = field.id;
     if (field.multi) chipWrap.dataset.multi = 'true';
-    field.chips.forEach(chip => {
+    const chipButton = chip => {
       const chipBtn = document.createElement('button');
       chipBtn.type = 'button';
       chipBtn.className = 'chip-btn';
@@ -820,8 +820,28 @@ function renderPlainField(container, field) {
         if (field.multi) toggleMultiChip(this, field.id);
         else toggleSingleChip(this, field.id);
       };
-      chipWrap.appendChild(chipBtn);
-    });
+      return chipBtn;
+    };
+    const grouped = groupedChips(field);
+    if (grouped) {
+      // Each group under its own small heading; empty groups are left out.
+      chipWrap.classList.add('chip-grouped');
+      [...grouped.groups, { name: '', items: grouped.loose }].forEach(group => {
+        if (!group.items.length) return;
+        const block = document.createElement('div');
+        block.className = 'chip-group';
+        if (group.name) {
+          const heading = document.createElement('div');
+          heading.className = 'chip-group-label';
+          heading.textContent = group.name;
+          block.appendChild(heading);
+        }
+        group.items.forEach(item => block.appendChild(chipButton(item.chip)));
+        chipWrap.appendChild(block);
+      });
+    } else {
+      field.chips.forEach(chip => chipWrap.appendChild(chipButton(chip)));
+    }
     container.appendChild(chipWrap);
   }
 

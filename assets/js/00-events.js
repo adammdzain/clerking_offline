@@ -40,7 +40,7 @@
     'openOrShareSerialPdf', 'openSerialModal', 'printSerialPdf', 'refreshSerialPreview',
     'toggleSerialMobileView', 'openEhis', 'orderBloods', 'openPcHelperModal', 'closePcHelperModal', 'checkPcHelper', 'openPcHelperSetup',
     // schema_editor.html and schema-editor.js
-    'addChips', 'chooseSetupFile', 'closeAddModal', 'closeChipModal', 'deleteChip', 'deleteField',
+    'addChips', 'addChipGroup', 'renameChipGroup', 'moveChipGroup', 'deleteChipGroup', 'chooseSetupFile', 'closeAddModal', 'closeChipModal', 'deleteChip', 'deleteField',
     'deleteSubmenu', 'downloadTemplatesFile', 'loadSetupFile', 'moveChip', 'moveField',
     'moveFieldTo', 'moveSubmenu', 'openAddModal', 'openChipModal', 'renderBoard',
     'resetAllToBaseline', 'resetSubmenu', 'revertField', 'setFieldOption', 'setTypeFilter',

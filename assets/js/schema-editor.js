@@ -49,6 +49,7 @@ function init() {
       toggleTheme();
     }
   });
+  initChipDrag();
   renderBoard();
   new ResizeObserver(teFitBoard).observe(document.getElementById('main-sections'));
 }
@@ -96,6 +97,7 @@ function presentIds() {
 // ---------- What changed ----------
 function schemaNorm(key, value) {
   if (key === 'chips') return JSON.stringify((value || []).map(normalizeChip));
+  if (key === 'chipGroups') return JSON.stringify(value || []);
   if (key === 'multi' || key === 'long') return String(!!value);
   return value == null ? '' : String(value);
 }
@@ -203,6 +205,7 @@ function buildOverrides() {
         SCHEMA_FIELD_KEYS.forEach(k => {
           if (sameProp(k, field[k], bf.field[k])) return;
           if (k === 'chips') diff.chips = (field.chips || []).map(normalizeChip);
+          else if (k === 'chipGroups') diff.chipGroups = schemaClone(field.chipGroups || []);
           else if (k === 'multi' || k === 'long') diff[k] = !!field[k];
           else diff[k] = field[k] || '';
         });
@@ -399,18 +402,44 @@ function fieldHtml(cat, sub, field, filtering) {
         <input type="text" class="te-prefix" value="${escapeHtml(field.line || schemaDefaultLine(field))}" aria-label="Note line for ${name}. {value} is replaced by the answer." spellcheck="false" autocomplete="off" data-key="${key('line')}" data-on-change="updateLine" data-args="${args(id, { thisValue: true })}">
       </label>`;
   const idTag = `<span class="code-id" title="Field ID">${escapeHtml(id)}</span>`;
-  const classes = `te-field${modified ? ' is-modified' : ''}${chips.length > TE_WIDE_FIELD_CHIPS ? ' is-wide' : ''}`;
+  const grouped = groupedChips(field);
+  const classes = `te-field${modified ? ' is-modified' : ''}${grouped || chips.length > TE_WIDE_FIELD_CHIPS ? ' is-wide' : ''}`;
 
   // Sliders, the GCS picker and the age boxes are their own controls: only the wording can change.
   if (fixed) {
     return `<div class="${classes}" data-field="${escapeHtml(id)}">${top}${note}<div class="te-field-foot">${idTag}</div></div>`;
   }
 
-  const chipList = chips.map((chip, ci) => {
+  const chipTag = (chip, ci) => {
     const label = chipLabel(chip);
     const output = chipOutput(chip);
-    return `<button type="button" class="chip-tag" data-key="${key(`chip${ci}`)}" data-on-click="openChipModal" data-args="${args(id, ci)}" aria-label="Edit button ${escapeHtml(label)}">${escapeHtml(label)}${output !== label ? `<span class="te-chip-out">→ ${escapeHtml(output)}</span>` : ''}</button>`;
-  }).join('');
+    return `<button type="button" class="chip-tag" data-key="${key(`chip${ci}`)}" data-on-click="openChipModal" data-args="${args(id, ci)}"${grouped ? ` draggable="true" data-drag-field="${escapeHtml(id)}" data-drag-index="${ci}"` : ''} aria-label="Edit button ${escapeHtml(label)}">${escapeHtml(label)}${output !== label ? `<span class="te-chip-out">→ ${escapeHtml(output)}</span>` : ''}</button>`;
+  };
+  const addInput = (group, where) => `<input type="text" class="te-chip-add" placeholder="Add button" aria-label="Add buttons to ${escapeHtml(where)}, separated by commas" autocomplete="off" data-key="${key(`chipadd:${group}`)}" data-on-change="addChips" data-args="${args(id, { this: true }, group)}">`;
+  const chipList = grouped ? '' : chips.map(chipTag).join('');
+
+  // Plan's buttons sit in named groups: rename, reorder or delete a group here, drag a button
+  // between groups, or pick its group in the button's dialog.
+  let groupsBlock = '';
+  if (grouped) {
+    const n = grouped.groups.length;
+    const box = (name, gi, items) => `<div class="te-group" data-drop-field="${escapeHtml(id)}" data-drop-group="${escapeHtml(name)}">
+        <div class="te-group-head">
+          ${gi === null
+            ? '<span class="te-group-loose">No group</span>'
+            : `<input type="text" class="te-group-name" value="${escapeHtml(name)}" aria-label="Group name" spellcheck="false" autocomplete="off" data-key="${key(`group${gi}`)}" data-on-change="renameChipGroup" data-args="${args(id, gi, { thisValue: true })}">
+              ${iconButton(`${id}:gup${gi}`, 'moveChipGroup', [id, gi, -1], gi === 0, `Move group ${name} up`, TE_UP)}
+              ${iconButton(`${id}:gdown${gi}`, 'moveChipGroup', [id, gi, 1], gi === n - 1, `Move group ${name} down`, TE_DOWN)}
+              <button type="button" class="te-action is-danger" data-on-click="deleteChipGroup" data-args="${args(id, gi)}" aria-label="Delete group ${escapeHtml(name)}">Delete</button>`}
+        </div>
+        <div class="chip-container">${items.map(it => chipTag(it.chip, it.index)).join('')}${addInput(name, gi === null ? `${field.label} with no group` : `the ${name} group`)}</div>
+      </div>`;
+    groupsBlock = `<div class="te-groups">
+        ${grouped.groups.map((g, gi) => box(g.name, gi, g.items)).join('')}
+        ${grouped.loose.length ? box('', null, grouped.loose) : ''}
+        <input type="text" class="te-chip-add te-group-add" placeholder="Add group" aria-label="Add a group of buttons to ${name}" autocomplete="off" data-key="${key('groupadd')}" data-on-change="addChipGroup" data-args="${args(id, { this: true })}">
+      </div>`;
+  }
   const segment = (prop, options, label) => `<div class="te-seg" role="group" aria-label="${escapeHtml(label)}">${options.map(([value, text]) =>
     `<button type="button" aria-pressed="${!!field[prop] === value}" data-key="${key(`${prop}-${value}`)}" data-on-click="setFieldOption" data-args="${args(id, prop, value)}">${text}</button>`).join('')}</div>`;
   const others = filtering ? [] : cat.submenus.filter(s => s !== sub);
@@ -422,15 +451,18 @@ function fieldHtml(cat, sub, field, filtering) {
 
   return `<div class="${classes}" data-field="${escapeHtml(id)}">
     ${top}
-    <div class="chip-container">
+    ${grouped ? groupsBlock : `<div class="chip-container">
       ${chipList}
-      <input type="text" class="te-chip-add" placeholder="Add button" aria-label="Add buttons to ${name}, separated by commas" autocomplete="off" data-key="${key('chipadd')}" data-on-change="addChips" data-args="${args(id, { this: true })}">
-    </div>
+      ${addInput('', field.label)}
+    </div>`}
     <div class="te-options">
       ${chips.length ? segment('multi', [[false, 'Pick one'], [true, 'Pick several']], `How many buttons ${field.label} takes`) : ''}
       ${segment('long', [[false, 'One line'], [true, 'Several lines']], `Box size for ${field.label}`)}
     </div>
-    <input type="text" class="te-hint" value="${escapeHtml(field.placeholder || '')}" placeholder="Hint shown in the empty box" aria-label="Hint for ${name}" autocomplete="off" data-key="${key('hint')}" data-on-change="updateField" data-args="${args(id, 'placeholder', { thisValue: true })}">
+    ${field.long
+      // A several-lines box keeps the line breaks in its hint.
+      ? `<textarea class="te-hint" rows="3" placeholder="Hint shown in the empty box" aria-label="Hint for ${name}" autocomplete="off" data-key="${key('hint')}" data-on-change="updateField" data-args="${args(id, 'placeholder', { thisValue: true })}">${escapeHtml(field.placeholder || '')}</textarea>`
+      : `<input type="text" class="te-hint" value="${escapeHtml(field.placeholder || '')}" placeholder="Hint shown in the empty box" aria-label="Hint for ${name}" autocomplete="off" data-key="${key('hint')}" data-on-change="updateField" data-args="${args(id, 'placeholder', { thisValue: true })}">`}
     ${note}
     <div class="te-field-foot">${idTag}${moveTo}</div>
   </div>`;
@@ -686,21 +718,155 @@ function parseChipList(text) {
   return text.split(',').map(s => s.trim()).filter(Boolean);
 }
 
-function addChips(id, input) {
+function addChips(id, input, group) {
   const ctx = findField(id);
   const added = parseChipList(input.value);
   input.value = '';
   if (!ctx || added.length === 0) return;
   const chips = ctx.field.chips || [];
+  const grouped = Array.isArray(ctx.field.chipGroups);
   const labels = new Set(chips.map(c => chipLabel(c).toLowerCase()));
   added.forEach(label => {
     if (labels.has(label.toLowerCase())) return;
     labels.add(label.toLowerCase());
-    chips.push(label);
+    if (grouped) chips.splice(groupEnd(ctx.field, chips, group || ''), 0, withChipGroup(label, group || ''));
+    else chips.push(label);
   });
   ctx.field.chips = chips;
   refreshField(id);
   afterEdit(ctx.sub.id);
+}
+
+// ---------- Button groups (fields with chipGroups: Plan) ----------
+// Whether a chip shows in the named group; "" is the "No group" box.
+function inChipGroup(field, chip, group) {
+  const g = chipGroup(chip);
+  return group ? g === group : !(g && field.chipGroups.includes(g));
+}
+
+// Where a new button for a group goes: right after that group's last button.
+function groupEnd(field, chips, group) {
+  let last = -1;
+  chips.forEach((c, i) => { if (inChipGroup(field, c, group)) last = i; });
+  return last === -1 ? chips.length : last + 1;
+}
+
+// Moves button `from` into `group`, before button `before` (an index in the same list) or last.
+function placeChip(fieldId, from, group, before) {
+  const ctx = findField(fieldId);
+  if (!ctx || !ctx.field.chips || !ctx.field.chips[from]) return;
+  const chips = ctx.field.chips;
+  const [chip] = chips.splice(from, 1);
+  let at;
+  if (before !== null && before !== undefined && before !== from) at = before > from ? before - 1 : before;
+  else if (before === from) at = from;
+  else at = groupEnd(ctx.field, chips, group);
+  chips.splice(at, 0, withChipGroup(chip, group));
+  refreshField(fieldId);
+  afterEdit(ctx.sub.id);
+}
+
+function addChipGroup(id, input) {
+  const ctx = findField(id);
+  const name = input.value.trim().slice(0, 60);
+  input.value = '';
+  if (!ctx || !name || !Array.isArray(ctx.field.chipGroups)) return;
+  if (ctx.field.chipGroups.some(g => g.toLowerCase() === name.toLowerCase())) {
+    showToast(`There is already a group called ${name}`);
+    return;
+  }
+  ctx.field.chipGroups.push(name);
+  refreshField(id);
+  afterEdit(ctx.sub.id);
+}
+
+function renameChipGroup(id, gi, value) {
+  const ctx = findField(id);
+  if (!ctx || !Array.isArray(ctx.field.chipGroups)) return;
+  const old = ctx.field.chipGroups[gi];
+  const name = value.trim().slice(0, 60);
+  const taken = ctx.field.chipGroups.some((g, i) => i !== gi && g.toLowerCase() === name.toLowerCase());
+  if (old === undefined || !name || taken || name === old) {
+    if (taken) showToast(`There is already a group called ${name}`);
+    refreshField(id);
+    return;
+  }
+  ctx.field.chipGroups[gi] = name;
+  ctx.field.chips = (ctx.field.chips || []).map(c => (chipGroup(c) === old ? withChipGroup(c, name) : c));
+  refreshField(id);
+  afterEdit(ctx.sub.id);
+}
+
+function moveChipGroup(id, gi, delta) {
+  const ctx = findField(id);
+  const list = ctx && ctx.field.chipGroups;
+  const to = gi + delta;
+  if (!list || to < 0 || to >= list.length) return;
+  [list[gi], list[to]] = [list[to], list[gi]];
+  refreshField(id);
+  afterEdit(ctx.sub.id);
+}
+
+function deleteChipGroup(id, gi) {
+  const ctx = findField(id);
+  const name = ctx && ctx.field.chipGroups && ctx.field.chipGroups[gi];
+  if (name === undefined) return;
+  const count = (ctx.field.chips || []).filter(c => chipGroup(c) === name).length;
+  if (count && !confirm(`Delete group "${name}"? Its ${count} button${count === 1 ? '' : 's'} will move to "No group".`)) return;
+  ctx.field.chipGroups.splice(gi, 1);
+  ctx.field.chips = (ctx.field.chips || []).map(c => (chipGroup(c) === name ? withChipGroup(c, '') : c));
+  refreshField(id);
+  afterEdit(ctx.sub.id);
+}
+
+// Drag a button onto another group (or onto a button, to go before it). Mouse only: on a phone,
+// the group picker in the button's dialog does the same.
+let chipDrag = null;
+function initChipDrag() {
+  const board = document.getElementById('main-sections');
+  const dropTarget = e => {
+    const box = e.target.closest && e.target.closest('.te-group');
+    return chipDrag && box && box.dataset.dropField === chipDrag.fieldId ? box : null;
+  };
+  const clearOver = () => document.querySelectorAll('.te-group.is-drop').forEach(el => el.classList.remove('is-drop'));
+  board.addEventListener('dragstart', e => {
+    const tag = e.target.closest && e.target.closest('.chip-tag[data-drag-field]');
+    if (!tag) return;
+    chipDrag = { fieldId: tag.dataset.dragField, index: +tag.dataset.dragIndex };
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', tag.textContent);
+    tag.classList.add('is-dragging');
+  });
+  board.addEventListener('dragover', e => {
+    const box = dropTarget(e);
+    if (!box) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (!box.classList.contains('is-drop')) {
+      clearOver();
+      box.classList.add('is-drop');
+    }
+  });
+  board.addEventListener('dragleave', e => {
+    const box = dropTarget(e);
+    if (box && !box.contains(e.relatedTarget)) box.classList.remove('is-drop');
+  });
+  board.addEventListener('drop', e => {
+    const box = dropTarget(e);
+    if (!box) return;
+    e.preventDefault();
+    const onTag = e.target.closest('.chip-tag[data-drag-field]');
+    const before = onTag ? +onTag.dataset.dragIndex : null;
+    const drag = chipDrag;
+    chipDrag = null;
+    clearOver();
+    placeChip(drag.fieldId, drag.index, box.dataset.dropGroup, before);
+  });
+  board.addEventListener('dragend', () => {
+    chipDrag = null;
+    clearOver();
+    document.querySelectorAll('.chip-tag.is-dragging').forEach(el => el.classList.remove('is-dragging'));
+  });
 }
 
 function moveField(id, delta) {
@@ -764,22 +930,47 @@ function openChipModal(fieldId, index) {
   document.getElementById('chipOutput').value = chipOutput(chip) === chipLabel(chip) ? '' : chipOutput(chip);
   document.getElementById('chipTitle').textContent = `Button in ${ctx.field.label}`;
   document.getElementById('chipError').textContent = '';
+  const groupRow = document.getElementById('chipGroupRow');
+  const select = document.getElementById('chipGroup');
+  const grouped = Array.isArray(ctx.field.chipGroups);
+  groupRow.hidden = !grouped;
+  if (grouped) {
+    const names = ctx.field.chipGroups;
+    select.replaceChildren(...[...names, ''].map(name => new Option(name || 'No group', name)));
+    const g = chipGroup(chip);
+    select.value = g && names.includes(g) ? g : '';
+  }
   syncChipMoveButtons();
   openModal('chipModal', 'chipLabel');
+}
+
+// Earlier / later: the neighbour in the same group when the field is grouped.
+function chipNeighbour(ctx, index, delta) {
+  const chips = ctx.field.chips;
+  if (!Array.isArray(ctx.field.chipGroups)) {
+    const to = index + delta;
+    return to >= 0 && to < chips.length ? to : -1;
+  }
+  const g = chipGroup(chips[index]);
+  const group = g && ctx.field.chipGroups.includes(g) ? g : '';
+  for (let i = index + delta; i >= 0 && i < chips.length; i += delta) {
+    if (inChipGroup(ctx.field, chips[i], group)) return i;
+  }
+  return -1;
 }
 
 function syncChipMoveButtons() {
   const ctx = chipEdit && findField(chipEdit.fieldId);
   if (!ctx) return;
-  document.getElementById('chipEarlier').disabled = chipEdit.index === 0;
-  document.getElementById('chipLater').disabled = chipEdit.index === ctx.field.chips.length - 1;
+  document.getElementById('chipEarlier').disabled = chipNeighbour(ctx, chipEdit.index, -1) === -1;
+  document.getElementById('chipLater').disabled = chipNeighbour(ctx, chipEdit.index, 1) === -1;
 }
 
 function moveChip(delta) {
   const ctx = chipEdit && findField(chipEdit.fieldId);
   if (!ctx) return;
   const chips = ctx.field.chips;
-  const to = chipEdit.index + delta;
+  const to = chipNeighbour(ctx, chipEdit.index, delta);
   if (to < 0 || to >= chips.length) return;
   const [chip] = chips.splice(chipEdit.index, 1);
   chips.splice(to, 0, chip);
@@ -809,8 +1000,17 @@ function submitChipModal(event) {
     document.getElementById('chipError').textContent = 'The button needs some text.';
     return;
   }
-  ctx.field.chips[chipEdit.index] = normalizeChip({ label, output: output || label });
+  const index = chipEdit.index;
+  const before = ctx.field.chips[index];
+  const grouped = Array.isArray(ctx.field.chipGroups);
+  const group = grouped ? document.getElementById('chipGroup').value : undefined;
+  ctx.field.chips[index] = normalizeChip({ label, output: output || label, group: grouped ? chipGroup(before) : undefined });
   closeModal('chipModal');
+  // A new group: the button goes to the end of that group.
+  if (grouped && !inChipGroup(ctx.field, before, group)) {
+    placeChip(ctx.field.id, index, group, null);
+    return;
+  }
   refreshField(ctx.field.id);
   afterEdit(ctx.sub.id);
 }
@@ -1041,7 +1241,11 @@ function submitAddModal(event) {
 
 // ---------- Changes sheet ----------
 function chipNames(chips) {
-  return (chips || []).map(c => (chipOutput(c) !== chipLabel(c) ? `${chipLabel(c)} → ${chipOutput(c)}` : chipLabel(c))).join(', ');
+  return (chips || []).map(c => {
+    const name = chipOutput(c) !== chipLabel(c) ? `${chipLabel(c)} → ${chipOutput(c)}` : chipLabel(c);
+    const g = chipGroup(c);
+    return g === undefined ? name : `${name} (${g || 'no group'})`;
+  }).join(', ');
 }
 
 function describeChanges() {
@@ -1077,6 +1281,7 @@ function describeChanges() {
         if (!sameProp('label', field.label, b.label)) diffs.push(`renamed from "${b.label}"`);
         if (!sameProp('placeholder', field.placeholder, b.placeholder)) diffs.push(`hint "${field.placeholder || ''}"`);
         if (!sameProp('prefix', field.prefix, b.prefix) || !sameProp('line', field.line, b.line)) diffs.push(`note line "${field.line || schemaDefaultLine(field)}"`);
+        if (!sameProp('chipGroups', field.chipGroups, b.chipGroups)) diffs.push(`groups [${(field.chipGroups || []).join(', ')}] (was [${(b.chipGroups || []).join(', ')}])`);
         if (!sameProp('chips', field.chips, b.chips)) diffs.push(`buttons [${chipNames(field.chips)}] (was [${chipNames(b.chips)}])`);
         if (!sameProp('multi', field.multi, b.multi)) diffs.push(field.multi ? 'pick several' : 'pick one');
         if (!sameProp('long', field.long, b.long)) diffs.push(field.long ? 'several lines' : 'one line');

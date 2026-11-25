@@ -439,6 +439,20 @@
     }
     input[type="text"].te-chip-add:focus { flex-basis: 240px; border-style: solid; }
 
+    /* Button groups (Plan): one box per group; buttons drag between boxes. */
+    .te-groups { display: flex; flex-direction: column; gap: 8px; }
+    .te-group { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); transition: border-color .15s, background-color .15s; }
+    .te-group.is-drop { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+    .te-group-head { display: flex; align-items: center; gap: 4px; min-height: 28px; }
+    input[type="text"].te-group-name { flex: 1; min-width: 0; padding: 3px 6px; margin-left: -7px; border-color: transparent; background: transparent; font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    input[type="text"].te-group-name:hover { border-color: var(--border); }
+    input[type="text"].te-group-name:focus { border-color: var(--accent); background: var(--field); text-transform: none; letter-spacing: 0; color: var(--text); }
+    .te-group-loose { font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .chip-tag[draggable="true"] { cursor: grab; }
+    .chip-tag.is-dragging { opacity: .4; }
+    input[type="text"].te-group-add { align-self: flex-start; }
+    textarea.te-hint { resize: vertical; font-size: 12.5px; }
+
     .te-note { display: flex; align-items: center; gap: 8px; margin: 0; white-space: nowrap; }
     input[type="text"].te-prefix { flex: 1; min-width: 0; padding: 5px 10px; font-size: 12.5px; }
 
@@ -746,6 +760,10 @@
         <label for="chipOutput">Writes in the note</label>
         <input type="text" id="chipOutput" autocomplete="off" spellcheck="false" placeholder="Same as the button text" aria-describedby="chipOutputHint">
         <p class="modal-hint" id="chipOutputHint">e.g. a button "HTN" can write "Hypertension".</p>
+        <div id="chipGroupRow" hidden>
+          <label for="chipGroup">Group</label>
+          <select id="chipGroup"></select>
+        </div>
         <div class="modal-row">
           <button type="button" id="chipEarlier" data-on-click="moveChip" data-args='[-1]'>Move earlier</button>
           <button type="button" id="chipLater" data-on-click="moveChip" data-args='[1]'>Move later</button>

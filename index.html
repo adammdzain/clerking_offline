@@ -3221,7 +3221,12 @@
     /* Impression and Plan: the two short boxes share the top row, Plan takes the full width below. */
     html[data-theme] body #main-sections #impression-section.content.expanded.cb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     @media (max-width: 640px) { html[data-theme] body #main-sections #impression-section.content.expanded.cb-grid { grid-template-columns: minmax(0, 1fr); } }
-    html[data-theme] body #impression-section.cb-grid > .cb-field:has(> textarea) { grid-column: 1 / -1; }    html[data-theme] body .cb-field > label:first-child { margin-top: 0; }
+    html[data-theme] body #impression-section.cb-grid > .cb-field:has(> textarea) { grid-column: 1 / -1; }
+    /* Grouped buttons (Plan): a small heading over each group's wrapped row. */
+    html[data-theme] body .chip-container.chip-grouped { display: block; }
+    .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip-group + .chip-group { margin-top: 10px; }
+    .chip-group-label { flex-basis: 100%; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }    html[data-theme] body .cb-field > label:first-child { margin-top: 0; }
 
     /* Each field (label + its box) sits in its own panel, one step lighter than the
        section in dark mode and one step tinted against the white section in day mode. */

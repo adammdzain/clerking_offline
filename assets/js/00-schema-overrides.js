@@ -3,17 +3,19 @@
 // so anything added to the shipped file later still shows up. Shape (version 2):
 // {
 //   version: 2,
-//   fields:   { id: { label, prefix, line, placeholder, chips, multi, long } }       changed values only
+//   fields:   { id: { label, prefix, line, placeholder, chips, multi, long, chipGroups } }  changed values only
 //   submenus: { id: { title, noteHeader, insertLabel, clearLabel, fields: [ids] } }  fields: full order, when changed
 //   order:    { category: [submenu ids] }                                           full order, when changed
 //   addedFields:   { id: { home: submenuId, label, prefix, line, placeholder, chips, multi, long } }
 //   addedSubmenus: { id: { category, title, noteHeader } }
 //   removed: [ids of shipped fields and submenus]
 // }
-// A chip is a string, or { label, output } when the note should say something other than the button.
+// A chip is a string, or { label, output, group } when the note should say something other than the
+// button, or the button sits under a group heading. chipGroups is the field's ordered list of group
+// names (only fields that ship with one, Plan for now, are grouped); "" means "no group".
 const SCHEMA_OVERRIDES_KEY = 'ed_doc_schema_v2';
 const SCHEMA_LEGACY_KEY = 'ed_doc_schema_overrides';
-const SCHEMA_FIELD_KEYS = ['label', 'prefix', 'line', 'placeholder', 'chips', 'multi', 'long'];
+const SCHEMA_FIELD_KEYS = ['label', 'prefix', 'line', 'placeholder', 'chips', 'multi', 'long', 'chipGroups'];
 const SCHEMA_SUBMENU_KEYS = ['title', 'noteHeader', 'insertLabel', 'clearLabel'];
 const SCHEMA_HOPI_CONTAINER = 'sections-container';
 const SCHEMA_VITALS_SUBMENU = 'vital-signs-section';
@@ -35,11 +37,62 @@ function chipOutput(chip) {
   return String((chip && (chip.output || chip.label)) || '');
 }
 
-// The stored form: a plain string unless the note wording differs from the button.
+// The group a chip sits under: a name, "" for no group, or undefined when it never had one.
+function chipGroup(chip) {
+  return chip && typeof chip === 'object' && typeof chip.group === 'string' ? chip.group.trim() : undefined;
+}
+
+// The stored form: a plain string unless the note wording differs from the button or it has a group.
 function normalizeChip(chip) {
   const label = chipLabel(chip).trim();
   const output = chipOutput(chip).trim();
-  return output && output !== label ? { label, output } : label;
+  const group = chipGroup(chip);
+  if (group === undefined) return output && output !== label ? { label, output } : label;
+  const out = { label };
+  if (output && output !== label) out.output = output;
+  out.group = group;
+  return out;
+}
+
+function withChipGroup(chip, group) {
+  return normalizeChip({ label: chipLabel(chip), output: chipOutput(chip), group });
+}
+
+function normalizeChipGroups(list) {
+  const seen = new Set();
+  return list.filter(n => typeof n === 'string').map(n => n.trim().slice(0, 60)).filter(n => {
+    if (!n || seen.has(n.toLowerCase())) return false;
+    seen.add(n.toLowerCase());
+    return true;
+  });
+}
+
+// A grouped field's buttons, in group order. Buttons with no group, or a group that no longer
+// exists, are "loose" and come last. Each item keeps its index in field.chips.
+function groupedChips(field) {
+  if (!Array.isArray(field.chipGroups)) return null;
+  const byName = new Map(field.chipGroups.map(name => [name, []]));
+  const loose = [];
+  (field.chips || []).forEach((chip, index) => {
+    const g = chipGroup(chip);
+    (g && byName.has(g) ? byName.get(g) : loose).push({ chip, index });
+  });
+  return { groups: field.chipGroups.map(name => ({ name, items: byName.get(name) })), loose };
+}
+
+// Buttons saved before groups existed take the group the shipped button with the same text has.
+function inheritChipGroups(chips, baseChips) {
+  const groupOf = new Map();
+  (baseChips || []).forEach(c => {
+    const g = chipGroup(c);
+    if (g) groupOf.set(chipLabel(c).toLowerCase(), g);
+  });
+  if (!groupOf.size) return chips;
+  return chips.map(c => {
+    if (chipGroup(c) !== undefined) return c;
+    const g = groupOf.get(chipLabel(c).toLowerCase());
+    return g ? withChipGroup(c, g) : c;
+  });
 }
 
 function isPlainObject(value) {
@@ -68,6 +121,7 @@ function normalizeSchemaOverrides(raw) {
     ['label', 'prefix', 'line', 'placeholder'].forEach(k => { if (text(src[k]) !== undefined) out[k] = src[k]; });
     if (Array.isArray(src.chips)) out.chips = src.chips.map(normalizeChip).filter(c => chipLabel(c));
     ['multi', 'long'].forEach(k => { if (typeof src[k] === 'boolean') out[k] = src[k]; });
+    if (Array.isArray(src.chipGroups)) out.chipGroups = normalizeChipGroups(src.chipGroups);
     return out;
   };
 
@@ -223,7 +277,10 @@ function applySchemaOverrides(templates, ov) {
   Object.entries(ov.fields).forEach(([id, change]) => {
     const f = fields.get(id);
     if (!f) return;
-    SCHEMA_FIELD_KEYS.forEach(k => { if (change[k] !== undefined) f[k] = schemaClone(change[k]); });
+    SCHEMA_FIELD_KEYS.forEach(k => {
+      if (change[k] === undefined) return;
+      f[k] = k === 'chips' ? inheritChipGroups(schemaClone(change[k]), f.chips) : schemaClone(change[k]);
+    });
   });
 
   // A field listed under another submenu has been moved there.
