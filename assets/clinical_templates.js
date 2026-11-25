@@ -1466,7 +1466,7 @@ const CLINICAL_TEMPLATES = [
             "prefix": "Plan",
             "line": "Plan:\n{value}",
             "long": true,
-            "chipGroups": ["Airway and breathing", "Circulation", "IV medication", "NEB medication", "Oral medication", "IM medication", "Trauma", "Disposition", "Others"],
+            "chipGroups": ["Airway and breathing", "Circulation", "IV medication", "IM medication", "NEB medication", "Oral medication", "Trauma", "Others", "Disposition"],
             "chips": [
               {"label": "NpO2 3l/min", "group": "Airway and breathing"},
               {"label": "Facemask 5l/min", "group": "Airway and breathing"},
@@ -1480,9 +1480,9 @@ const CLINICAL_TEMPLATES = [
               {"label": "IV Drip 2/3 maintenance HSD5", "group": "Circulation"},
               {"label": "Correction 5%", "group": "Circulation"},
               {"label": "Transfuse", "group": "Circulation"},
-              {"label": "Strict I/O", "group": "Circulation"},
               {"label": "Insert CBD", "group": "Circulation"},
-              {"label": "Serial ECG/ECG on chest pain", "group": "Circulation"},
+              {"label": "NBM", "group": "Circulation"},
+              {"label": "Strict I/O", "group": "Circulation"},
               {"label": "IV pantoprazole 40mg", "group": "IV medication"},
               {"label": "IV Maxolon 10mg", "group": "IV medication"},
               {"label": "IV Tramal 50mg", "group": "IV medication"},
@@ -1492,21 +1492,26 @@ const CLINICAL_TEMPLATES = [
               {"label": "IV Hydrocortisone 200mg", "group": "IV medication"},
               {"label": "IV piriton 10mg", "group": "IV medication"},
               {"label": "IV buscopan 20mg", "group": "IV medication"},
+              {"label": "IV MgSO4 2G", "group": "IV medication"},
+              {"label": "IM adrenaline 0.5mg", "group": "IM medication"},
+              {"label": "S/C Fondaparinux 2.5mg", "group": "IM medication"},
+              {"label": "S/C Actrapid", "group": "IM medication"},
+              {"label": "T Aspirin 300mg", "group": "Oral medication"},
+              {"label": "T Plavix 300mg", "group": "Oral medication"},
+              {"label": "T PCM 1g", "group": "Oral medication"},
+              {"label": "Insert Ryles tube", "group": "Others"},
+              {"label": "Serial ECG/ECG on chest pain", "group": "Others"},
+              {"label": "Refer", "group": "Disposition"},
+              {"label": "Allow discharge", "group": "Disposition"},
               {"label": "NEB VN 1:3", "group": "NEB medication"},
               {"label": "NEB VAN 1:2:1", "group": "NEB medication"},
               {"label": "NEB budesonide 2mg", "group": "NEB medication"},
               {"label": "NEB saline 3% and suction", "group": "NEB medication"},
-              {"label": "T Aspirin 300mg", "group": "Oral medication"},
-              {"label": "T Plavix 300mg", "group": "Oral medication"},
-              {"label": "IM adrenaline 0.5mg", "group": "IM medication"},
-              {"label": "IM ATT 0.5mg", "group": "IM medication"},
-              {"label": "Refer", "group": "Disposition"},
-              {"label": "NBM", "group": "Others"},
-              {"label": "Insert Ryles tube", "group": "Others"},
-              {"label": "S/C Fondaparinux 2.5mg", "group": "Others"}
+              {"label": "IM ATT 0.5mg", "group": "Trauma"},
+              {"label": "For dressing and T&S", "group": "Trauma"}
             ],
             "multi": true,
-            "placeholder": "One item per line, e.g.\n1. Keep NBM\n2. IV NS 1 pint 8 hourly\n3. Refer surgical team"
+            "placeholder": "One item per line, e.g.\n1. Keep NBM\n2. IV NS"
           }
         ]
       }
