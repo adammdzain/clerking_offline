@@ -385,7 +385,7 @@ async function generateRa301PdfBlob(data) {
     pdfDoc.removePage(1);
   }
 
-  const finalBytes = await pdfDoc.save();
+  const finalBytes = await saveAsA4(pdfDoc);
   const blob = new Blob([finalBytes], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
   return { blob, url, pdfBytes: finalBytes, warnings };

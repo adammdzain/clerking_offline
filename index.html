@@ -1364,20 +1364,25 @@
       background: #141822;
     }
 
+    /* flex: none keeps each page at its true size in the scrolling column; without it
+       the card shrinks to the pane height and the canvas stretches, so A4 looks squat. */
     .pdf-page-card {
       position: relative;
+      flex: none;
       background: #ffffff;
       border-radius: 4px;
       overflow: hidden;
       max-width: 100%;
       display: flex;
       justify-content: center;
+      align-items: flex-start;
     }
 
     .pdf-page-card canvas {
       display: block;
       max-width: 100%;
       height: auto !important;
+      align-self: flex-start;
     }
 
     .preview-frame {

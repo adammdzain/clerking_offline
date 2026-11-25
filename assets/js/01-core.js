@@ -276,6 +276,26 @@ async function ensurePdfLibraries() {
   }
 }
 
+// Some official templates are US Letter (612x792pt). Put each page on an A4 sheet,
+// scaled to fit and centred, so the preview, the download and the print are all true A4.
+async function saveAsA4(pdfDoc) {
+  const A4_W = 595.28, A4_H = 841.89;
+  const pages = pdfDoc.getPages();
+  const isA4 = pages.every(p => {
+    const { width, height } = p.getSize();
+    return Math.abs(width - A4_W) < 2 && Math.abs(height - A4_H) < 2;
+  });
+  if (isA4) return pdfDoc.save();
+  const out = await PDFLib.PDFDocument.create();
+  const embedded = await out.embedPages(pages);
+  for (const ep of embedded) {
+    const s = Math.min(A4_W / ep.width, A4_H / ep.height);
+    const w = ep.width * s, h = ep.height * s;
+    out.addPage([A4_W, A4_H]).drawPage(ep, { x: (A4_W - w) / 2, y: (A4_H - h) / 2, width: w, height: h });
+  }
+  return out.save();
+}
+
 async function loadPdfTemplateBytes(pdfPath) {
   const resp = await fetch(pdfPath);
   if (!resp || !resp.ok) {
