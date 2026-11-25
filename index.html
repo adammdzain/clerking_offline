@@ -3218,6 +3218,13 @@
     }
     html[data-theme] body .cb-grid > :not(.cb-field) { grid-column: 1 / -1; }
     .cb-field { min-width: 0; }
+    /* Impression and Plan: the two short boxes share the top row, Plan takes the full width below. */
+    html[data-theme] body #main-sections #impression-section.content.expanded.cb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 640px) { html[data-theme] body #main-sections #impression-section.content.expanded.cb-grid { grid-template-columns: minmax(0, 1fr); } }
+    html[data-theme] body #impression-section.cb-grid > .cb-field:has(> textarea) { grid-column: 1 / -1; }
+    /* Pick-several text boxes list their buttons one per row, as each is one line of the box. */
+    .chip-container.chip-lines { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+    .chip-container.chip-lines .chip-btn { width: 100%; text-align: left; justify-content: flex-start; margin: 0; }
     html[data-theme] body .cb-field > label:first-child { margin-top: 0; }
 
     /* Each field (label + its box) sits in its own panel, one step lighter than the

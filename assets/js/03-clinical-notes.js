@@ -809,6 +809,8 @@ function renderPlainField(container, field) {
     chipWrap.className = 'chip-container';
     chipWrap.dataset.target = field.id;
     if (field.multi) chipWrap.dataset.multi = 'true';
+    // A pick-several text box: one button per row, each written as its own numbered line.
+    if (field.multi && field.long) chipWrap.classList.add('chip-lines');
     field.chips.forEach(chip => {
       const chipBtn = document.createElement('button');
       chipBtn.type = 'button';
@@ -1159,6 +1161,11 @@ function chipTokens(value) {
   return value.split(',').map(s => s.trim()).filter(Boolean);
 }
 
+// Text-box fields hold one item per line, numbered "1. ..."; the numbers are not part of the item.
+function lineTokens(value) {
+  return value.split('\n').map(s => s.replace(/^\s*\d+\s*[.)]\s*/, '').trim()).filter(Boolean);
+}
+
 function toggleSingleChip(btn, inputId) {
   const container = btn.closest('.chip-container');
   const isActive = btn.classList.contains('active');
@@ -1181,11 +1188,12 @@ function toggleMultiChip(btn, inputId) {
   const input = document.getElementById(inputId);
   if (!input) return;
   const value = chipValue(btn);
-  const tokens = chipTokens(input.value);
+  const lines = input.tagName === 'TEXTAREA';
+  const tokens = lines ? lineTokens(input.value) : chipTokens(input.value);
   const at = tokens.findIndex(t => t.toLowerCase() === value.toLowerCase());
   if (at === -1) tokens.push(value);
   else tokens.splice(at, 1);
-  input.value = tokens.join(', ');
+  input.value = lines ? tokens.map((t, i) => `${i + 1}. ${t}`).join('\n') : tokens.join(', ');
   input.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
@@ -1216,8 +1224,10 @@ function setupChipSync() {
       input._chipSyncAttached = true;
       const syncChips = () => {
         const val = input.value.replace(/\s+/g, ' ').trim().toLowerCase();
-        const tokens = chipTokens(val);
         const multi = container.dataset.multi === 'true';
+        const tokens = multi && input.tagName === 'TEXTAREA'
+          ? lineTokens(input.value).map(t => t.replace(/\s+/g, ' ').toLowerCase())
+          : chipTokens(val);
         container.querySelectorAll('.chip-btn').forEach(btn => {
           const text = chipValue(btn).replace(/\s+/g, ' ').toLowerCase();
           btn.classList.toggle('active', !!text && (multi ? tokens.includes(text) : text === val));
