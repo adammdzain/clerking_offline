@@ -294,9 +294,9 @@ const CLINICAL_TEMPLATES = [
               "Productive cough",
               "Dry cough",
               "Barking cough",
-              "Paroxysmal nocturnal",
-              "Post-tussive emesis"
+              "Whooping cough"
             ],
+            "multi": true,
             "placeholder": "Tap buttons or type custom value..."
           },
           {
@@ -308,9 +308,7 @@ const CLINICAL_TEMPLATES = [
               "Yellowish",
               "Greenish / Purulent",
               "Blood-streaked / Hemoptysis",
-              "Thick tenacious",
-              "Copious amount",
-              "Scanty amount"
+              "Blood only"
             ],
             "placeholder": "Tap buttons or type custom value..."
           },
@@ -320,12 +318,14 @@ const CLINICAL_TEMPLATES = [
             "prefix": "associated with",
             "chips": [
               "Shortness of breath",
-              "Wheezing",
+              "Noisy breathing",
               "Chest discomfort",
               "Sore throat",
-              "Rhinorrhea",
-              "Fever"
+              "Runny nose",
+              "Fever",
+              "Post-tussive vomiting"
             ],
+            "multi": true,
             "placeholder": "e.g., SOB, chest tightness, sore throat"
           }
         ]
@@ -1466,6 +1466,16 @@ const CLINICAL_TEMPLATES = [
             "prefix": "Plan",
             "line": "Plan:\n{value}",
             "long": true,
+            "chips": [
+              "NpO2 3l/min",
+              "Facemask 5l/min",
+              "HFM 15l/min",
+              "HFNC",
+              "CPAP",
+              "BiPAP",
+              "For Intubation"
+            ],
+            "multi": true,
             "placeholder": "One item per line, e.g.\n1. Keep NBM\n2. IV NS 1 pint 8 hourly\n3. Refer surgical team"
           }
         ]
