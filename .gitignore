@@ -11,3 +11,7 @@ tools/inspect_crops/
 __pycache__/
 .wrangler/
 .claude/
+
+# Work-PC helper: eHIS addresses and scripts, never public. Shipped only as the
+# password-protected zip that build_dist.py puts in dist/downloads/.
+pc-helper/

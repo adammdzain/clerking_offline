@@ -1296,6 +1296,7 @@ function wipePatientData() {
   window.edDocPersistenceOff = true;
   wipeDraftStorage();
   if (typeof wipeSessionStorage === 'function') wipeSessionStorage();
+  if (typeof wipeSerialCharts === 'function') wipeSerialCharts();
   try {
     Object.keys(sessionStorage).forEach(k => sessionStorage.removeItem(k));
   } catch (e) {}

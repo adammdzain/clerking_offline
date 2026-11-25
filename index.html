@@ -3711,6 +3711,20 @@
     html[data-theme] body .nnj-result .is-warn { border-left-color: #d99a00; }
     html[data-theme] body .nnj-result .is-high { border-left-color: #e8590c; }
     html[data-theme] body .nnj-result .is-urgent { border-left-color: var(--danger); font-weight: 600; }
+    /* Serial Chart grid: rows = tests, columns = result times */
+    #serialModal .modal-body { grid-template-columns: 1.35fr 0.65fr; }
+    .serial-grid-wrap { overflow-x: auto; }
+    .serial-grid { border-collapse: collapse; font-size: 12px; }
+    .serial-grid th, .serial-grid td { border: 1px solid var(--border); padding: 0; }
+    .serial-grid .serial-rowhead { position: sticky; left: 0; z-index: 1; background: var(--panel); text-align: left; white-space: nowrap; padding: 2px 8px; font-weight: 500; color: var(--text); }
+    .serial-grid .serial-rowhead b { color: var(--accent); font-size: 11px; margin-right: 4px; }
+    .serial-grid tr.serial-group th, .serial-grid tr.serial-group td { border-top: 2px solid var(--border); }
+    .serial-grid input { width: 78px; border: 0; background: transparent; color: var(--text); font: inherit; padding: 3px 5px; text-align: center; }
+    .serial-grid input:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .serial-grid thead th { vertical-align: top; }
+    .serial-grid thead input { display: block; font-weight: 600; }
+    .serial-del { display: block; width: 100%; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 14px; line-height: 1; padding: 2px 0; }
+    .serial-del:hover { color: var(--text); }
   </style>
   <script src="./assets/js/00-theme-init.js"></script>
   <script src="./assets/js/00-handover.js"></script>
@@ -3725,6 +3739,14 @@
     </div>
     <div class="button-row" style="margin-top:0">
       <button type="button" class="btn-secondary header-stamp" data-on-click="addTimestamp" data-args='[]'><span>Add Timestamp</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+      <div class="forms-menu header-ehis" id="ehisMenu">
+        <button type="button" class="btn-secondary forms-menu-btn" id="ehisMenuBtn" aria-haspopup="true" aria-expanded="false" data-on-click="toggleFormsMenu" data-args='[{"event": true}]'><span>eHIS</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="forms-menu-list" role="menu">
+          <button type="button" role="menuitem" class="btn-secondary" data-on-click="openEhis" data-args='[]' title="Logs in to eHIS on this PC and opens the ED patient list (needs the PC helper)"><span>Open eHIS</span></button>
+          <button type="button" role="menuitem" class="btn-secondary" data-on-click="orderBloods" data-args='[]' title="Order set picker for the eHIS chart open on this PC: ticks the tests and stops on Place Order for you to Record (needs the PC helper)"><span>Order bloods</span></button>
+          <button type="button" role="menuitem" class="btn-secondary" data-on-click="openPcHelperModal" data-args='[]'><span>PC helper (install)</span></button>
+        </div>
+      </div>
       <div class="forms-menu" id="formsMenu">
         <button type="button" class="btn-secondary forms-menu-btn" id="formsMenuBtn" aria-haspopup="true" aria-expanded="false" data-on-click="toggleFormsMenu" data-args='[{"event": true}]'><span>Forms</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
         <div class="forms-menu-list" role="menu">
@@ -3733,6 +3755,7 @@
           <button type="button" role="menuitem" class="btn-rujukan" data-on-click="openRujukanModal" data-args='[]'><span>Surat Rujukan</span></button>
           <button type="button" role="menuitem" class="btn-bt105" data-on-click="openBt105Modal" data-args='[]'><span>PER.SS-BT 105</span></button>
           <button type="button" role="menuitem" class="btn-bt105" style="background:#0d9488; color:#f0fdfa;" data-on-click="openFisioterapiModal" data-args='[]'><span>Physiotherapy Referral</span></button>
+          <button type="button" role="menuitem" class="btn-bt105" style="background:#7c3aed; color:#f5f3ff;" data-on-click="openSerialModal" data-args='[]'><span>Serial Chart (Labs)</span></button>
         </div>
       </div>
       <div class="forms-menu header-more">
@@ -3772,7 +3795,6 @@
               <input aria-label="Choose document image from gallery" type="file" id="ocrInput" accept="image/*" data-skip-export="true"
                 style="position: absolute; left: -9999px; opacity: 0; width: 1px; height: 1px; pointer-events: none;" tabindex="-1" aria-hidden="true">
               <button type="button" id="btnEhisPaste" class="btn-secondary" title="Fills Patient Demographic from the eHIS chart open on this PC (needs the eHIS helper)"><span>Get from eHIS</span></button>
-              <button type="button" id="btnEhisOpen" class="btn-secondary" title="Logs in to eHIS on this PC and opens the ED patient list (needs the eHIS helper)"><span>Open eHIS</span></button>
             </div>
             <span class="ocr-text" style="font-size: 11px; margin-top: 6px; color: var(--muted);">(Or paste image via
               Cmd/Ctrl+V)</span>
@@ -4654,6 +4676,7 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
           <button type="button" role="menuitem" class="btn-rujukan" data-on-click="openRujukanModal" data-args='[]'><span>Surat Rujukan</span></button>
           <button type="button" role="menuitem" class="btn-bt105" data-on-click="openBt105Modal" data-args='[]'><span>PER.SS-BT 105</span></button>
           <button type="button" role="menuitem" class="btn-bt105" style="background:#0d9488; color:#f0fdfa;" data-on-click="openFisioterapiModal" data-args='[]'><span>Physiotherapy Referral</span></button>
+          <button type="button" role="menuitem" class="btn-bt105" style="background:#7c3aed; color:#f5f3ff;" data-on-click="openSerialModal" data-args='[]'><span>Serial Chart (Labs)</span></button>
         </div>
       </div>
       <button type="button" class="clear-btn" data-on-click="clearDocArea" data-args='[]'><span>Clear Notes</span> <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
@@ -5812,6 +5835,140 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
   </div>
 
   <!-- =======================================================
+       SERIAL CHART FOR ROUTINE INVESTIGATIONS (BOR.HDU.SEJ/09) MODAL
+       ======================================================= -->
+  <div id="serialModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>Serial Chart for Routine Investigations <span class="badge" style="background:#7c3aed; color:#f5f3ff;">BOR.HDU.SEJ/09</span></h2>
+          <p>Lab results from eHIS (Events in 24 Hrs) &bull; Kept on this device for 72 hours &bull; Vector PDF Output</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-on-click="closeSerialModal" data-args='[]' aria-label="Close">&times;</button>
+      </div>
+
+      <!-- Mobile View Toggle -->
+      <div class="mobile-view-toggle" style="padding: 10px 14px 0 14px;">
+        <button type="button" id="serialMobileFormBtn" class="chip-btn active" data-on-click="toggleSerialMobileView" data-args='["form"]'>Edit Form</button>
+        <button type="button" id="serialMobilePrevBtn" class="chip-btn" data-on-click="toggleSerialMobileView" data-args='["preview"]'>Live PDF Preview</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-form-pane" id="serialFormPane">
+          <div class="form-card">
+            <div class="form-card-title">
+              <span>Patient</span>
+              <span style="font-size:11px; text-transform:none; color:var(--muted)">Filled from the eHIS chart the results came from</span>
+            </div>
+            <div class="pat-field">
+              <label for="serial_name">Name</label>
+              <input type="text" id="serial_name" placeholder="Full patient name">
+            </div>
+            <div class="grid-pat-2">
+              <div class="pat-field">
+                <label for="serial_rn">RN</label>
+                <input type="text" id="serial_rn" placeholder="e.g. LD00001234">
+              </div>
+              <div class="pat-field">
+                <label for="serial_ic">IC</label>
+                <input type="text" id="serial_ic" placeholder="e.g. 900101-01-4234">
+              </div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" id="btnSerialLabs" class="btn-bt105" style="background:#7c3aed; color:#f5f3ff;" data-on-click="getSerialLabs" data-args='[]'><span>Get labs from eHIS</span></button>
+              <button type="button" class="btn-secondary" data-on-click="addSerialColumn" data-args='[]'><span>Add column</span></button>
+              <button type="button" class="btn-secondary" data-on-click="clearSerialPatient" data-args='[]'><span>Clear this patient</span></button>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="form-card-title">
+              <span>Results</span>
+              <span id="serialCount" style="font-size:11px; text-transform:none; color:var(--muted)"></span>
+            </div>
+            <p id="serialEmpty" style="margin:0; font-size:12.5px; color:var(--muted)">No results yet. Open the patient's chart in eHIS, then press Get labs from eHIS. Blood gas and anything else can be typed in after Add column.</p>
+            <div class="serial-grid-wrap"><table id="serialGrid" class="serial-grid"></table></div>
+            <details id="serialOthers" style="display:none; font-size:12px;">
+              <summary>Results not on the form (<span id="serialOthersCount">0</span>)</summary>
+              <ul id="serialOthersList" style="margin:6px 0 0; padding-left:18px; color:var(--muted)"></ul>
+            </details>
+          </div>
+        </div>
+
+        <!-- Right: Live PDF Preview Pane -->
+        <div class="modal-preview-pane" id="serialPreviewPane">
+          <div class="preview-toolbar">
+            <span>Live Serial Chart Preview</span>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn-secondary" style="font-size:11px; padding:5px 10px;" data-on-click="refreshSerialPreview" data-args='[]'><span>Update</span> <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+            </div>
+          </div>
+          <div class="preview-frame-wrap">
+            <div id="serialCanvasContainer" class="pdf-canvas-container"></div>
+            <iframe id="serialPreviewFrame" class="preview-frame" title="Serial Chart PDF Live Preview" style="display:none;"></iframe>
+            <div id="serialPreviewLoading" class="preview-loading">Generating Vector PDF...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="btn-secondary" data-on-click="closeSerialModal" data-args='[]'>Close</button>
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" class="btn-secondary" data-on-click="openOrShareSerialPdf" data-args='[]'><span>Share / Open</span> <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          <button type="button" class="btn-secondary" data-on-click="printSerialPdf" data-args='[]'><span>Print</span> <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+          <button type="button" class="btn-bt105" data-on-click="downloadSerialPdf" data-args='[]'><span>Download Filled PDF</span> <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       PC HELPER (INSTALL) MODAL
+       ======================================================= -->
+  <div id="pcHelperModal" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width:640px; height:auto; max-height:94vh;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>PC helper for eHIS</h2>
+          <p>Needed once per work PC for Open eHIS, Get from eHIS, Order bloods and Serial Chart labs</p>
+        </div>
+        <button type="button" class="modal-close-btn" data-on-click="closePcHelperModal" data-args='[]' aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-form-pane" style="padding:16px; overflow-y:auto;">
+        <div class="form-card">
+          <div class="form-card-title"><span>Install or update</span></div>
+          <ol style="margin:0; padding-left:20px; font-size:13px; line-height:1.6;">
+            <li><a href="./downloads/eddoc-pc-helper.zip" download class="btn-bt105" style="display:inline-block; text-decoration:none; padding:5px 12px;">Download installer (.zip)</a> &mdash; the zip has a password: ask Dr Adam.</li>
+            <li>Right-click the downloaded zip &gt; <b>Extract All...</b> (with WinRAR: <b>Extract to eddoc-pc-helper\</b>) and type the password. Check Caps Lock: a wrong password leaves files out.</li>
+            <li>In the extracted folder double-click <b>install.bat</b> (click Run if Windows asks).</li>
+            <li>Answer <b>Save login?</b> &mdash; on a shared PC answer N (Open eHIS then just shows the login page).</li>
+            <li>Click <b>eHIS</b> &gt; <b>Open eHIS</b> (top right) once. Chrome asks &ldquo;Open eHIS to ED Doc?&rdquo;: tick <b>Always allow</b>, then Open.</li>
+          </ol>
+          <p style="margin:0; font-size:12px; color:var(--muted)">Updating: same steps; your saved login and your order sets file are kept. Installs for the current Windows user only, no admin needed.</p>
+        </div>
+        <div class="form-card">
+          <div class="form-card-title"><span>Check this PC</span></div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button type="button" id="btnPcHelperCheck" class="btn-secondary" data-on-click="checkPcHelper" data-args='[]'><span>Check this PC</span></button>
+            <span id="pcHelperStatus" role="status" style="font-size:12.5px;"></span>
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-card-title"><span>Order bloods</span></div>
+          <p style="margin:0; font-size:12.5px; line-height:1.5;">Open the patient's chart in eHIS, then click <b>eHIS</b> &gt; <b>Order bloods</b> (top right). Pick sets and tests in the window that opens on the PC; it ticks them in eHIS and stops on the <b>Place Order</b> screen with priority URGENT. Check the lines and click <b>Record</b> yourself. Order sets: <code>ehis-order-sets.txt</code> in <code>%USERPROFILE%\ehis-login</code> (Notepad).</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div></div>
+        <div><button type="button" class="btn-secondary" data-on-click="closePcHelperModal" data-args='[]'>Close</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
        WEBCAM OCR SCANNER MODAL
        ======================================================= -->
   <div id="webcamModal" class="modal-backdrop">
@@ -5905,6 +6062,8 @@ l-22 -34 -7 35 c-5 19 -4 49 1 65 4 17 10 49 13 73 6 52 -14 58 -34 10 -7 -18
   <script src="./assets/js/13-exam-map.js"></script>
   <script src="./assets/js/14-forms-menu.js"></script>
   <script src="./assets/js/15-form-fisioterapi.js"></script>
+  <script src="./assets/js/19-form-serial.js"></script>
+  <script src="./assets/js/20-pc-helper.js"></script>
   <script src="./assets/js/16-case-board.js"></script>
   <script src="./assets/js/17-session-restore.js"></script>
 </body>

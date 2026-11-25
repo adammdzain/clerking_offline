@@ -36,6 +36,9 @@
     'togglePat301MobileView', 'toggleQeChip', 'toggleRa301MobileView', 'toggleRujukanMobileView',
     'toggleSurveyNormal', 'toggleTheme', 'toggleVoiceDictation', 'triggerPWAInstall',
     'undoExamAction', 'undoTraumaPin', 'wipePatientData',
+    'addSerialColumn', 'clearSerialPatient', 'closeSerialModal', 'downloadSerialPdf', 'getSerialLabs',
+    'openOrShareSerialPdf', 'openSerialModal', 'printSerialPdf', 'refreshSerialPreview',
+    'toggleSerialMobileView', 'openEhis', 'orderBloods', 'openPcHelperModal', 'closePcHelperModal', 'checkPcHelper',
     // schema_editor.html and schema-editor.js
     'addChips', 'chooseSetupFile', 'closeAddModal', 'closeChipModal', 'deleteChip', 'deleteField',
     'deleteSubmenu', 'downloadTemplatesFile', 'loadSetupFile', 'moveChip', 'moveField',

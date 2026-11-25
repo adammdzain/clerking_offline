@@ -545,3 +545,26 @@ function downloadFisioterapiPdf() { return getFisioterapiManager().download(); }
 function openOrShareFisioterapiPdf() { return getFisioterapiManager().shareOrOpen(); }
 function printFisioterapiPdf() { return getFisioterapiManager().print(); }
 function toggleFisioterapiMobileView(view) { return toggleMobilePane('fisio', view, refreshFisioterapiPreview); }
+
+let serialManager;
+
+function getSerialManager() {
+  if (!serialManager) {
+    serialManager = new FormPreviewManager({
+      loadingId: 'serialPreviewLoading',
+      canvasContainerId: 'serialCanvasContainer',
+      frameId: 'serialPreviewFrame',
+      filenamePrefix: 'Serial_Chart',
+      getFormData: getSerialFormData,
+      generatePdfBlob: generateSerialPdfBlob
+    });
+  }
+  return serialManager;
+}
+
+function refreshSerialPreview() { return getSerialManager().refresh(); }
+function debouncedSerialRefresh() { return getSerialManager().debounceRefresh(); }
+function downloadSerialPdf() { return getSerialManager().download(); }
+function openOrShareSerialPdf() { return getSerialManager().shareOrOpen(); }
+function printSerialPdf() { return getSerialManager().print(); }
+function toggleSerialMobileView(view) { return toggleMobilePane('serial', view, refreshSerialPreview); }

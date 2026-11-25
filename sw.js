@@ -40,6 +40,8 @@ const CORE_ASSETS = [
   './assets/js/16-case-board.js',
   './assets/js/17-session-restore.js',
   './assets/js/18-nnj.js',
+  './assets/js/19-form-serial.js',
+  './assets/js/20-pc-helper.js',
   './assets/fonts/hanken-grotesk-latin-wght-normal.woff2',
   './assets/icon-192.png',
   './assets/icon-512.png',
@@ -53,6 +55,7 @@ const CORE_ASSETS = [
   './assets/surat_rujukan.pdf',
   './assets/per_ss_bt105.pdf',
   './assets/per_fisioterapi.pdf',
+  './assets/serial_chart.pdf',
 ];
 
 // The scanner (about 16 MB). Fetched in the background once the app is running, so a weak

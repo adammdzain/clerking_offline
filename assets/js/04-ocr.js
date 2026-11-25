@@ -395,14 +395,6 @@ if (btnEhisPaste) {
     getFromEhis();
   });
 }
-const btnEhisOpen = document.getElementById('btnEhisOpen');
-if (btnEhisOpen) {
-  btnEhisOpen.addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.location.href = 'eddoc-ehis://login';   // PC helper runs the eHIS auto-login; nothing comes back
-    showToast('Opening eHIS... (only on PCs with the eHIS helper)', 4000);
-  });
-}
 if (btnOcrScreen) {
   btnOcrScreen.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -513,17 +505,21 @@ function fillEhisDemographics(d) {
 // registers, then watches the clipboard for the answer carrying that nonce, so an
 // older copy (e.g. another patient's) is never taken. PCs without the helper: timeout.
 let ehisFetchActive = false;
-async function getFromEhis() {
+function getFromEhis() {
+  return ehisRequest('get', document.getElementById('btnEhisPaste'), 'Get from eHIS', fillEhisDemographics);
+}
+
+// kind 'get' answers EHIS-DEMO (demographics), 'labs' EHIS-LABS (Serial Chart), 'ver' EHIS-VER (helper version)
+async function ehisRequest(kind, btn, idleText, onData, onTimeout) {
   if (ehisFetchActive) return;
   ehisFetchActive = true;
-  const btn = document.getElementById('btnEhisPaste');
   const label = btn && btn.querySelector('span');
-  if (label) label.textContent = 'Getting from eHIS...';
+  if (label) label.textContent = kind === 'ver' ? 'Checking...' : 'Getting from eHIS...';
   // Ask for clipboard access now, while the click still counts as the user's gesture:
   // Chrome only shows its one-time permission question then, not during the polling.
   try { await navigator.clipboard.readText(); } catch (err) { /* denied or unfocused: polling reports it */ }
   const nonce = Array.from(crypto.getRandomValues(new Uint8Array(8)), b => b.toString(16).padStart(2, '0')).join('');
-  window.location.href = 'eddoc-ehis://get/' + nonce;   // external link type: the page stays put
+  window.location.href = 'eddoc-ehis://' + kind + '/' + nonce;   // external link type: the page stays put
   const started = Date.now();
   const until = started + 45000;   // first use includes Chrome's "Open ...?" question
   let done = false, hinted = false;
@@ -543,7 +539,7 @@ async function getFromEhis() {
         }
         continue;
       }
-      const m = /^EHIS-(DEMO|ERR):(.*)$/s.exec(text || '');
+      const m = /^EHIS-(DEMO|LABS|VER|ERR):(.*)$/s.exec(text || '');
       if (!m) continue;
       let d;
       try { d = JSON.parse(m[2]); } catch (err) { continue; }
@@ -551,12 +547,13 @@ async function getFromEhis() {
       done = true;
       try { await navigator.clipboard.writeText(''); } catch (err) { /* the helper clears it after 60 s anyway */ }
       if (m[1] === 'ERR') showToast('eHIS: ' + d.error, 6000);
-      else fillEhisDemographics(d);
+      else if (m[1] === ({ get: 'DEMO', labs: 'LABS', ver: 'VER' })[kind]) onData(d);
     }
-    if (!done) showToast('No answer from eHIS. Is the eHIS helper installed on this PC and a patient chart open?', 7000);
+    if (!done && onTimeout) onTimeout();
+    else if (!done) showToast('No answer from eHIS. Is the PC helper installed on this PC (eHIS > PC helper) and a patient chart open?', 7000);
   } finally {
     window.removeEventListener('focus', onFocus);
-    if (label) label.textContent = 'Get from eHIS';
+    if (label) label.textContent = idleText;
     ehisFetchActive = false;
   }
 }
