@@ -809,8 +809,6 @@ function renderPlainField(container, field) {
     chipWrap.className = 'chip-container';
     chipWrap.dataset.target = field.id;
     if (field.multi) chipWrap.dataset.multi = 'true';
-    // A pick-several text box: one button per row, each written as its own numbered line.
-    if (field.multi && field.long) chipWrap.classList.add('chip-lines');
     field.chips.forEach(chip => {
       const chipBtn = document.createElement('button');
       chipBtn.type = 'button';
